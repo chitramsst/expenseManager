@@ -58,7 +58,7 @@ function HomeStack() {
 function Navigator() {
     return (
         <NavigationContainer>
-            <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} networkActivityIndicatorVisible={true} translucent={true}/>
+            <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'}/>
             <Stack.Navigator initialRouteName={"HomeStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
                 <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
                 <Stack.Screen name="IncomeStack" component={IncomeStack} options={{ headerShown: false }} />

@@ -14,7 +14,7 @@ const Stack = createStackNavigator()
 
 import HomeScreen from './views/HomeScreen';
 import IncomeListScreen from './views/Income/IncomeListScreen';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StatusBar, Text, View } from 'react-native';
 import NotificationIcon from './assets/Icons/NotificationIcon';
 
 interface RoutePropData {
@@ -58,6 +58,7 @@ function HomeStack() {
 function Navigator() {
     return (
         <NavigationContainer>
+            <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} networkActivityIndicatorVisible={true} translucent={true}/>
             <Stack.Navigator initialRouteName={"HomeStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
                 <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
                 <Stack.Screen name="IncomeStack" component={IncomeStack} options={{ headerShown: false }} />

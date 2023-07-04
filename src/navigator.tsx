@@ -1,6 +1,7 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,useNavigationContainerRef } from '@react-navigation/native';
 import { StackHeaderProps, createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 import HomeIcon from './assets/BottomBarIcons/Home'
 import ExchangeIcon from './assets/BottomBarIcons/Exchange'
 import HandIcon from './assets/BottomBarIcons/HandCoin'
@@ -8,14 +9,17 @@ import Wallet from './assets/BottomBarIcons/Wallet'
 import Coin from './assets/BottomBarIcons/Coin'
 import BackButtonIcon from './assets/Icons/BackButton'
 const Tab = createMaterialTopTabNavigator();
-
+import { useFlipper } from '@react-navigation/devtools';
 const Stack = createStackNavigator()
 
 
 import HomeScreen from './views/HomeScreen';
 import IncomeListScreen from './views/Income/IncomeListScreen';
+import LoginScreen from './views/Auth/LoginScreen';
 import { Pressable, StatusBar, Text, View } from 'react-native';
 import NotificationIcon from './assets/Icons/NotificationIcon';
+import OtpScreen from './views/Auth/OtpScreen';
+import RegisterScreen from './views/Auth/RegisterScreen';
 
 interface RoutePropData {
     routeData: StackHeaderProps
@@ -33,6 +37,17 @@ function LogoTitle({ routeData }: RoutePropData) {
             </Pressable>
         </View>
     );
+}
+
+
+function AuthStack() {
+    return (
+        <Stack.Navigator initialRouteName='Login' screenOptions={{headerShown : false}}>
+            <Stack.Screen name="Login" component={LoginScreen} options={{}} />
+            <Stack.Screen name="OtpScreen" component={OtpScreen} options={{}} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{}} />
+        </Stack.Navigator>
+    )
 }
 
 function IncomeStack() {
@@ -56,10 +71,13 @@ function HomeStack() {
 }
 
 function Navigator() {
+    const navigationRef = useNavigationContainerRef();
+    useFlipper(navigationRef);
     return (
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
             <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'}/>
-            <Stack.Navigator initialRouteName={"HomeStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
+            <Stack.Navigator initialRouteName={"AuthStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
+                <Stack.Screen name="AuthStack" component={AuthStack} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
                 <Stack.Screen name="IncomeStack" component={IncomeStack} options={{ headerShown: false }} />
             </Stack.Navigator>

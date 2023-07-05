@@ -1,4 +1,4 @@
-import { NavigationContainer,useNavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { StackHeaderProps, createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
@@ -20,6 +20,10 @@ import { Pressable, StatusBar, Text, View } from 'react-native';
 import NotificationIcon from './assets/Icons/NotificationIcon';
 import OtpScreen from './views/Auth/OtpScreen';
 import RegisterScreen from './views/Auth/RegisterScreen';
+import { loginStore } from "./stores/loginStore";
+
+import { useSelector, useDispatch } from 'react-redux';
+
 
 interface RoutePropData {
     routeData: StackHeaderProps
@@ -27,7 +31,7 @@ interface RoutePropData {
 function LogoTitle({ routeData }: RoutePropData) {
     return (
         <View className='flex flex-row justify-between items-center bg-white p-4'>
-            <Pressable  hitSlop={30} onPress={({}) => (routeData.navigation.goBack())}><BackButtonIcon /></Pressable>
+            <Pressable hitSlop={30} onPress={({ }) => (routeData.navigation.goBack())}><BackButtonIcon /></Pressable>
             <Text className='text-black text-xl font-bold '>{routeData.route.name}</Text>
             <Pressable className='flex flex-col justify-center relative '>
                 <View className='absolute h-4 w-4 bg-red-500 -top-1 -right-1 rounded-full z-10 flex justify-center items-center'>
@@ -39,10 +43,10 @@ function LogoTitle({ routeData }: RoutePropData) {
     );
 }
 
-
+// {useSelector((state) => { console.log(state); return <></> })}
 function AuthStack() {
     return (
-        <Stack.Navigator initialRouteName='Login' screenOptions={{headerShown : false}}>
+        <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={LoginScreen} options={{}} />
             <Stack.Screen name="OtpScreen" component={OtpScreen} options={{}} />
             <Stack.Screen name="Register" component={RegisterScreen} options={{}} />
@@ -73,17 +77,30 @@ function HomeStack() {
 function Navigator() {
     const navigationRef = useNavigationContainerRef();
     useFlipper(navigationRef);
+    const store = useSelector((state : any) => state.store);
+
     return (
-        <NavigationContainer ref={navigationRef}>
-            <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'}/>
-            <Stack.Navigator initialRouteName={"AuthStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
-                <Stack.Screen name="AuthStack" component={AuthStack} options={{ headerShown: false }} />
-                <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
-                <Stack.Screen name="IncomeStack" component={IncomeStack} options={{ headerShown: false }} />
-            </Stack.Navigator>
+        <NavigationContainer ref={navigationRef} >
+            <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
+            {store.userInfo.token ? (
+                <>
+                    <Stack.Navigator initialRouteName={"HomeStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
+                        <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
+                        <Stack.Screen name="IncomeStack" component={IncomeStack} options={{ headerShown: false }} />
+                    </Stack.Navigator>
+                </>
+            )
+                : (
+                    <>
+                        <Stack.Navigator initialRouteName={"AuthStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
+                            <Stack.Screen name="AuthStack" component={AuthStack} options={{ headerShown: false }} />
+                        </Stack.Navigator>
+                    </>
+                )
+            }
+
         </NavigationContainer>
     )
-
 }
 
 export default Navigator; 

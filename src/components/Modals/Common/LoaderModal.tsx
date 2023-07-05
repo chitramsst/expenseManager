@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, View, FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import CountryFlag from "react-native-country-flag-quality";
-import { Country, countryArray } from '../../data/countryList';
+import { Alert, Modal, StyleSheet, View, ActivityIndicator } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
-export default function ChooseCountryModal(props: any) {
+export default function LoaderModal(props: any) {
     const [modalVisible, setModalVisible] = useState(false);
     const [count, setCount] = useState(1);
     const offset2 = useSharedValue(0);
@@ -23,7 +20,7 @@ export default function ChooseCountryModal(props: any) {
         };
     });
 
-    function hideModal(country : Country) {
+    function hideModal() {
         offset2.value = withTiming(0, {
             duration: 300,
         });
@@ -31,7 +28,7 @@ export default function ChooseCountryModal(props: any) {
             duration: 200
         })
         setTimeout(() => {
-            props.hideModal(country);
+            props.hideModal();
         }, 100)
     }
 
@@ -61,19 +58,7 @@ export default function ChooseCountryModal(props: any) {
                     <Animated.View className={'h-screen w-screen absolute top-0 bg-black/40'} style={animatedStyle}>
                     </Animated.View>
                     <Animated.View style={[styles.centeredView, animatedStyle2]}>
-                        <FlatList className='flex flex-col bg-white' style={styles.modalView} 
-                        initialNumToRender={30}
-                        keyExtractor={item => item.code}
-                        data={countryArray}
-                        renderItem={({ item }) => {
-                            return (
-                                <Pressable key={item.code} className='flex items-center flex-row p-5 border-b border-black/10' android_ripple={{ color: 'rgba(0, 0, 0, 0.1)' }} onPress={() => { hideModal(item) }}>
-                                    <CountryFlag isoCode={item.code} size={13} quality='low' />
-                                    <Text className='text-black ml-2'>{item.name}</Text>
-                                </Pressable>
-                            )
-                        }}>
-                        </FlatList>
+                        <ActivityIndicator size={'large'} style={{width : 40 , height : 40}} color={'white'}/>
                     </Animated.View>
                 </Modal>
             </View>

@@ -8,7 +8,12 @@
 import * as React from 'react';
 
 import axios from 'axios';
-axios.defaults.baseURL = 'https://api.spaceflightnewsapi.net/';
+axios.defaults.baseURL = 'https://www.cashtide.shop/api/';
+
+import { persistStore } from "redux-persist"
+import { PersistGate } from "redux-persist/integration/react"
+import appStore from './src/stores/store';
+import { Provider } from "react-redux";
 
 import {
   SafeAreaView,
@@ -29,9 +34,13 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
+  let persistor = persistStore(appStore)
   return (
-    <Navigator/>
+    <Provider store={appStore}>
+      <PersistGate loading={null} persistor={persistor} >
+        <Navigator />
+      </PersistGate>
+    </Provider>
   );
 }
 

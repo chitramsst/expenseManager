@@ -23,6 +23,11 @@ import RegisterScreen from './views/Auth/RegisterScreen';
 import { loginStore } from "./stores/loginStore";
 
 import { useSelector, useDispatch } from 'react-redux';
+import AddIncomeScreen from './views/Income/AddIncomeScreen';
+import ExpenseListScreen from './views/Expense/ExpenseListScreen';
+import ExpenseAddScreen from './views/Expense/ExpenseAddScreen';
+import ExpenseCategoryAddScreen from './views/Expense/ExpenseCategoryAddScreen';
+import ProfileScreen from './views/Profile/ProfileScreen';
 
 
 interface RoutePropData {
@@ -33,12 +38,21 @@ function LogoTitle({ routeData }: RoutePropData) {
         <View className='flex flex-row justify-between items-center bg-white p-4'>
             <Pressable hitSlop={30} onPress={({ }) => (routeData.navigation.goBack())}><BackButtonIcon /></Pressable>
             <Text className='text-black text-xl font-bold '>{routeData.route.name}</Text>
-            <Pressable className='flex flex-col justify-center relative '>
-                <View className='absolute h-4 w-4 bg-red-500 -top-1 -right-1 rounded-full z-10 flex justify-center items-center'>
-                    <Text className='text-white text-xs '>1</Text>
-                </View>
-                <NotificationIcon />
-            </Pressable>
+            {
+                // @ts-ignore
+                routeData.route.params?.hideNotification != true ?
+                     (
+                        <Pressable className='flex flex-col justify-center relative '>
+                            <View className='absolute h-4 w-4 bg-red-500 -top-1 -right-1 rounded-full z-10 flex justify-center items-center'>
+                                <Text className='text-white text-xs '>1</Text>
+                            </View>
+                            <NotificationIcon />
+                        </Pressable>
+                    )
+                    :
+                    (<View></View>)
+            }
+
         </View>
     );
 }
@@ -54,22 +68,53 @@ function AuthStack() {
     )
 }
 
-function IncomeStack() {
+function ItemStack() {
     return (
-        <Stack.Navigator screenOptions={{ header: (props) => (<LogoTitle routeData={props} />) }}>
-            <Tab.Screen name="Income" component={IncomeListScreen} options={{}} />
+        <Stack.Navigator screenOptions={{ header: (props) => (<LogoTitle routeData={props} />) }} >
+            <Tab.Group>
+                <Tab.Screen name="Income" component={IncomeListScreen} options={{}}  />
+                <Tab.Screen name="Add Income" component={AddIncomeScreen} options={{}} initialParams={{ hideNotification: true }} />
+            </Tab.Group>
+            <Tab.Group>
+                <Tab.Screen name="Expense" component={ExpenseListScreen} options={{}}  />
+                <Tab.Screen name="Add Expense" component={ExpenseAddScreen} options={{}}  initialParams={{ hideNotification: true }} />
+            </Tab.Group>
+            <Tab.Group>
+                <Tab.Screen name="Profile" component={ProfileScreen} options={{}}  />
+            </Tab.Group>
+            <Stack.Group screenOptions={{presentation : 'modal'}}>
+                <Tab.Screen  name="Add Expense Category" component={ExpenseCategoryAddScreen} options={{}}  initialParams={{ hideNotification: true }} />
+            </Stack.Group>
         </Stack.Navigator>
     )
 }
-
+function BottomBarComponent({ state, descriptors, navigation })
+{
+    return (
+        <View className=' bg-[#F3F6FD] flex justify-evenly flex-row py-5'>
+            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Income'})}}>
+                <Coin color={'#9DB2CE'}></Coin>
+            </Pressable>
+            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Expense'})}}>
+                <Wallet color={'#9DB2CE'}></Wallet>
+            </Pressable>
+            <Pressable>
+                <HomeIcon color={'#5EACF9'}></HomeIcon>
+                <View className='bg-[#5EACF9] h-1.5 w-1.5 rounded-full absolute -bottom-2 left-2'></View>
+            </Pressable>
+            <Pressable>
+                <HandIcon color={'#9DB2CE'}></HandIcon>
+            </Pressable>
+            <Pressable>
+                <ExchangeIcon color={'#9DB2CE'}></ExchangeIcon>
+            </Pressable>
+        </View>
+    )
+}
 function HomeStack() {
     return (
-        <Tab.Navigator initialRouteName='Home' screenOptions={{ tabBarPressColor: 'rgba(255, 255, 255, 0)', tabBarStyle: { borderColor: 'rgba(255, 255, 255, 0)', shadowColor: 'rgba(255, 255, 255, 0)', backgroundColor: '#F3F6FD', height: 65, display: 'flex' }, tabBarShowLabel: false, tabBarActiveTintColor: '#5EACF9', tabBarInactiveTintColor: '#9DB2CE', tabBarIndicatorStyle: { backgroundColor: '#5EACF9', width: 5, height: 5, borderRadius: 100, left: "9%", bottom: 20 } }} tabBarPosition='bottom' >
-            <Tab.Screen name="Home0" component={HomeScreen} options={{ tabBarIcon: ({ focused, color }) => (focused ? <Coin color={color} /> : <Coin color={color} />) }} />
-            <Tab.Screen name="Home1" component={HomeScreen} options={{ tabBarIcon: ({ focused, color }) => (focused ? <Wallet color={color} /> : <Wallet color={color} />) }} />
+        <Tab.Navigator  initialRouteName='Home' tabBar={props =>  <BottomBarComponent {...props}/>} tabBarPosition='bottom'>
             <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarIcon: ({ focused, color }) => (focused ? <HomeIcon color={color} /> : <HomeIcon color={color} />) }} />
-            <Tab.Screen name="Home3" component={HomeScreen} options={{ tabBarIcon: ({ focused, color }) => (focused ? <HandIcon color={color} /> : <HandIcon color={color} />) }} />
-            <Tab.Screen name="Home4" component={HomeScreen} options={{ tabBarIcon: ({ focused, color }) => (focused ? <ExchangeIcon color={color} /> : <ExchangeIcon color={color} />) }} />
         </Tab.Navigator>
     )
 }
@@ -77,7 +122,7 @@ function HomeStack() {
 function Navigator() {
     const navigationRef = useNavigationContainerRef();
     useFlipper(navigationRef);
-    const store = useSelector((state : any) => state.store);
+    const store = useSelector((state: any) => state.store);
 
     return (
         <NavigationContainer ref={navigationRef} >
@@ -86,7 +131,7 @@ function Navigator() {
                 <>
                     <Stack.Navigator initialRouteName={"HomeStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
                         <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
-                        <Stack.Screen name="IncomeStack" component={IncomeStack} options={{ headerShown: false }} />
+                        <Stack.Screen name="ItemStack" component={ItemStack} options={{ headerShown: false }} />
                     </Stack.Navigator>
                 </>
             )

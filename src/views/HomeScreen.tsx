@@ -22,9 +22,9 @@ export default function HomeScreen({navigation}) {
       <View className='px-4 ' style={styles.container} >
         <View className='flex justify-between w-100 flex-row p-3 px-0'>
           <View className='flex flex-row gap-2 items-center'>
-            <View className='w-12 h-12 rounded-full bg-[#C4F439] flex justify-center items-center'>
+            <Pressable className='w-12 h-12 rounded-full bg-[#C4F439] flex justify-center items-center' onPress={() => {navigation.navigate('ItemStack', {screen : 'Profile'})}}>
               <Image source={require('../assets/images/Profile/profile_icon.png')} />
-            </View>
+            </Pressable>
             <View className='flex flex-col gap-1'>
               <Text className='text-black text-xs'>Hello👋 </Text>
               <Text className='font-bold text-black text-md'>Moncy James </Text>
@@ -43,8 +43,8 @@ export default function HomeScreen({navigation}) {
             <Text className='text-white text-3xl font-semibold'>$28,865.<Text className='text-white/40'>00</Text></Text>
             <View className='flex justify-between pt-2 flex-row'>
               <View className='h-16 w-16 bg-white flex justify-center items-center rounded-2xl'><PlusIcon color={'rgb(0 0 0)'} /></View>
-              <Pressable onPress={() => {navigation.navigate('IncomeStack', {screen : 'Income'})}} className='h-16 w-16 bg-white flex justify-center items-center rounded-2xl'><ArrowDownLeftIcon color={'rgb(0 0 0)'} /></Pressable>
-              <View className='h-16 w-16 bg-white flex justify-center items-center rounded-2xl'><ArrowUpRightIcon color={'rgb(0 0 0)'} /></View>
+              <Pressable onPress={() => {navigation.navigate('ItemStack', {screen : 'Income'})}} className='h-16 w-16 bg-white flex justify-center items-center rounded-2xl'><ArrowDownLeftIcon color={'rgb(0 0 0)'} /></Pressable>
+              <Pressable onPress={() => {navigation.navigate('ItemStack', {screen : 'Expense'})}}  className='h-16 w-16 bg-white flex justify-center items-center rounded-2xl'><ArrowUpRightIcon color={'rgb(0 0 0)'} /></Pressable>
               <View className='h-16 w-16 bg-white flex justify-center items-center rounded-2xl'><EllipsisHorizontalIcon color={'rgb(0 0 0)'} /></View>
             </View>
           </View>

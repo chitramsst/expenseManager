@@ -16,21 +16,44 @@ interface HomeState {
   count: number;
 }
 
+let randomItems = [
+  {
+    color : '#C4F439',
+    icon : require('../../assets/images/Icons/house.png')
+  },
+  {
+    color : '#F6AB65',
+    icon : require('../../assets/images/Icons/burger.png')
+  },
+  {
+    color : '#FE94B3',
+    icon : require('../../assets/images/Icons/fuel.png')
+  },
+  {
+    color : '#F9D75E',
+    icon : require('../../assets/images/Icons/shirt.png')
+  },
+  {
+    color : '#5EACF9',
+    icon : require('../../assets/images/Icons/medical.png')
+  },
+]
+
 function IncomeItem(){
     return ( 
     <View className='flex flex-row justify-between mt-3'>
         <View className='flex flex-row '>
-            <View className='h-10 w-10 bg-[#89D9BC] flex justify-center items-center rounded-lg'>
-                <Text className='text-white text-xl font-bold'>27</Text>
+            <View className='h-12 w-12 bg-[#F6AB65] flex justify-center items-center rounded-2xl' style={{backgroundColor : randomItems[Math.floor(Math.random() * 4)].color}}>
+                <Image source={randomItems[Math.floor(Math.random() * 4)].icon}></Image>
             </View>
-            <View className='flex flex-col gap-1 ml-2'>
-                <Text className='font-bold text-black text-md'>Xfortech</Text>
-                <Text className='text-[#9DB2CE] text-xs'>Monthly Salary </Text>
+            <View className='flex flex-col justify-between py-1 ml-2'>
+                <Text className='font-semibold text-black text-md'>KFC</Text>
+                <Text className='text-[#9DB2CE] text-xs'>Food</Text>
             </View>
         </View>
         <View className='flex flex-row '>
             <View className='flex flex-col gap-1 ml-3 items-end'>
-                <Text className='font-bold text-black text-md'>+$ 1500<Text className='text-[#9DB2CE]'>.00</Text></Text>
+                <Text className='font-bold text-black text-md'>-$ 1500<Text className='text-[#9DB2CE]'>.00</Text></Text>
                 <Text className='text-[#9DB2CE] text-xs'>27 March, 2023</Text>
             </View>
         </View>
@@ -38,7 +61,7 @@ function IncomeItem(){
     )
 }   
 
-export default function IncomeListScreen({navigation} : ScreenProps) {
+export default function ExpenseListScreen({navigation} : ScreenProps) {
   return (
     <SafeAreaView style={GlobalStyles.mainScreenContainer}>
       <View className='' style={styles.container} >
@@ -69,7 +92,7 @@ export default function IncomeListScreen({navigation} : ScreenProps) {
             <IncomeItem/>
             <IncomeItem/>
         </ScrollView>
-        <Pressable onPress={() => {navigation.navigate('Add Income')}} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{width : 60 , height : 60,left : ((Dimensions.get('window').width / 2) - 30)}}>
+        <Pressable onPress={() => {navigation.navigate('Add Expense')}} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{width : 60 , height : 60,left : ((Dimensions.get('window').width / 2) - 30)}}>
             <PlusIcon color={'#ffffff'} size={30}/>
         </Pressable>
       </View>

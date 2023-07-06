@@ -32,7 +32,7 @@ export default function RegisterScreen({ navigation } : PageProps) {
     const [emailError, setEmailError] = useState('')
     const dispatch = useDispatch();
     const [showLoader, setShowLoader] = useState(false)
-
+    // @ts-ignore
     const phoneNumber: string = useSelector((state) => state.phoneNumber.value);
 
     function hideModal() {
@@ -50,6 +50,7 @@ export default function RegisterScreen({ navigation } : PageProps) {
         userSchema.validate({name,email},{abortEarly : false}).then((out) => {
             registerUser()
         }).catch((reason) => {
+            // @ts-ignore
             reason.inner.forEach(error => {
                 if(error.path == 'name')
                 {
@@ -81,7 +82,7 @@ export default function RegisterScreen({ navigation } : PageProps) {
     return (
         <SafeAreaView style={GlobalStyles.mainScreenContainer}>
             <StatusBar backgroundColor={'rgba(49, 149, 247, 1)'} />
-            <View className="h-full w-full bg-white rounded-t-[30px] p-4 pt-1 flex justify-between flex-col " behavior='padding'>
+            <View className="h-full w-full bg-white rounded-t-[30px] p-4 pt-1 flex justify-between flex-col " >
                 <View className=" ">
                     <View className='flex flex-row justify-between pt-6 items-center'>
                         <Pressable onPress={() => {navigation.navigate('Login')}}>

@@ -508,5 +508,7 @@ export const countryArray =[
 export interface Country{
     name : string,
     code : string,
-    phone : number
+    phone : number,
+    symbol : string,
+    currency : string
 }

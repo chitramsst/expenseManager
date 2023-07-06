@@ -97,6 +97,7 @@ export default function OptScreen({ navigation }: Props) {
         {
           setShowLoader(true)
           dispatch(setUserObject(response.data.user))
+          axios.defaults.headers.common['Token'] = response.data.user.token
           navigation.popToTop();
           return;
         }
@@ -106,7 +107,7 @@ export default function OptScreen({ navigation }: Props) {
       }
 
     }).catch((e) => {
-      console.log(e.toJSON())
+      console.log(e.response?.status)
     })
   }
 

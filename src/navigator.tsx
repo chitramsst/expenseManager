@@ -28,6 +28,7 @@ import ExpenseListScreen from './views/Expense/ExpenseListScreen';
 import ExpenseAddScreen from './views/Expense/ExpenseAddScreen';
 import ExpenseCategoryAddScreen from './views/Expense/ExpenseCategoryAddScreen';
 import ProfileScreen from './views/Profile/ProfileScreen';
+import axios from 'axios';
 
 
 interface RoutePropData {
@@ -123,7 +124,7 @@ function Navigator() {
     const navigationRef = useNavigationContainerRef();
     useFlipper(navigationRef);
     const store = useSelector((state: any) => state.store);
-
+    axios.defaults.headers.common['Token'] = store.userInfo.token
     return (
         <NavigationContainer ref={navigationRef} >
             <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />

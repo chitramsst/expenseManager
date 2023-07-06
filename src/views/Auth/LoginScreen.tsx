@@ -9,7 +9,9 @@ import ChooseCountryModal from '../../components/Modals/ChooseCountryModal';
 import { Country } from '../../data/countryList';
 import CountryFlag from "react-native-country-flag";
 import { useSelector, useDispatch } from 'react-redux';
-import { setPhoneNumber } from '../../stores/slices/login/phoneNumberSlice';
+import { setCountry, setPhoneNumber } from '../../stores/slices/login/phoneNumberSlice';
+import { object, string, number, date, InferType } from 'yup';
+
 interface Props {
   navigation: any
 }
@@ -21,7 +23,7 @@ interface HomeState {
 export default function LoginScreen({ navigation } : Props) {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false)
-  const [selectedCountry, setSelectedCountry] = useState({name: "India",code: "IN",phone: 91})
+  const [selectedCountry, setSelectedCountry] = useState({name: "India",code: "IN",phone: 91,symbol: "₹",currency: "INR"})
   const [inputPhone, setInputPhone] = useState('')
 
   const phoneNumber = useSelector((state) => state.phoneNumber.value);
@@ -42,6 +44,8 @@ export default function LoginScreen({ navigation } : Props) {
       return;
     }
     dispatch(setPhoneNumber('+'+selectedCountry.phone+inputPhone))
+    console.log(selectedCountry)
+    dispatch(setCountry(selectedCountry))
     navigation.navigate('OtpScreen')
   }
   return (

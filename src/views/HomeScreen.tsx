@@ -7,6 +7,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import NotificationIcon from '../assets/Icons/NotificationIcon';
 import { ArrowDownLeftIcon, PlusIcon, ArrowUpRightIcon, EllipsisHorizontalIcon } from 'react-native-heroicons/solid'
 import { WHITE } from '../assets/colors';
+import { useSelector } from 'react-redux';
 
 interface HomeScreenProps {
   navigation: any
@@ -17,6 +18,7 @@ interface HomeState {
 }
 
 export default function HomeScreen({navigation}) {
+  const store = useSelector((state: any) => state.store);
   return (
     <SafeAreaView style={GlobalStyles.mainScreenContainer}>
       <View className='px-4 ' style={styles.container} >
@@ -27,7 +29,7 @@ export default function HomeScreen({navigation}) {
             </Pressable>
             <View className='flex flex-col gap-1'>
               <Text className='text-black text-xs'>Hello👋 </Text>
-              <Text className='font-bold text-black text-md'>Moncy James </Text>
+              <Text className='font-bold text-black text-md'>{store.userInfo?.name}</Text>
             </View>
           </View>
           <View className='flex flex-col justify-center relative '>

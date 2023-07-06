@@ -14,6 +14,7 @@ import axios from 'axios';
 import { object, string, number, date, InferType } from 'yup';
 import { setUserObject } from '../../stores/slices/authSlice';
 import LoaderModal from '../../components/Modals/Common/LoaderModal';
+import { Country, countryArray } from '../../data/countryList';
 interface PageProps {
     navigation: any
 }
@@ -34,7 +35,8 @@ export default function RegisterScreen({ navigation } : PageProps) {
     const [showLoader, setShowLoader] = useState(false)
     // @ts-ignore
     const phoneNumber: string = useSelector((state) => state.phoneNumber.value);
-
+    const selectedCountry: Country = useSelector((state) => state.phoneNumber.country);
+    console.log(selectedCountry)
     function hideModal() {
         setShowModal(false)
     }
@@ -66,10 +68,11 @@ export default function RegisterScreen({ navigation } : PageProps) {
     function registerUser()
     {
         setShowLoader(true)
-        axios.post('register',{name, email, phone : phoneNumber}).then((response) => {
+        axios.post('register',{name, email, phone : phoneNumber,country_code : selectedCountry.code , currency : selectedCountry.currency, currency_symbol : selectedCountry.symbol}).then((response) => {
             if(response.data.success == true)
             {
                 dispatch(setUserObject(response.data.user))
+                axios.defaults.headers.common['Token'] = response.data.user.token
                 navigation.navigate('HomeStack')
             }
             else{

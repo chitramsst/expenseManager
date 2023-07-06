@@ -64,7 +64,6 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
   let filteredList = {}
   function handleSearchChange(text: string) {
     setSearch(text)
-    setStateAction()
     let mytext = text;
     let obj = {}
     Object.keys(originalList).forEach((y, i) => {

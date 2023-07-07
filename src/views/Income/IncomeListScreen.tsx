@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { Text, StyleSheet, Button, View, StatusBar, ScrollView, ActivityIndicator, Image, ImageBackground, Dimensions, Pressable } from 'react-native'
+import { Text, StyleSheet, Button, View, StatusBar, ScrollView, ActivityIndicator, Image, ImageBackground, Dimensions, Pressable, RefreshControl } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles from '../../assets/globalstyles';
 import { TextInput } from 'react-native-gesture-handler';
@@ -16,14 +17,15 @@ interface ScreenProps {
 interface HomeState {
   count: number;
 }
-function IncomeList({ items }) {
+function IncomeList({ items } : any) {
   return (
-    items.map((x, i) => {
+    items.map((x : any, i : any) => {
       return <IncomeItem key={i} item={x} />
     })
   )
 }
-function IncomeItem({ item }) {
+
+function IncomeItem({ item } : any) {
   return (
     <View className='flex flex-row justify-between mt-3'>
       <View className='flex flex-row '>
@@ -37,7 +39,7 @@ function IncomeItem({ item }) {
       </View>
       <View className='flex flex-row '>
         <View className='flex flex-col gap-1 ml-3 items-end'>
-          <Text className='font-bold text-black text-md'>+$ {item.amount}<Text className='text-[#9DB2CE]'>.00</Text></Text>
+          <Text className='font-bold text-black text-md'>+$ {Math.trunc(item.amount)}<Text className='text-[#9DB2CE]'>.{(item.amount).toFixed(2).split('.')[1]}</Text></Text>
           <Text className='text-[#9DB2CE] text-xs'>{moment(item.date).format('LL')}</Text>
         </View>
       </View>
@@ -46,29 +48,41 @@ function IncomeItem({ item }) {
 }
 
 export default function IncomeListScreen({ navigation }: ScreenProps) {
-  const [itemList, setItemList] = useState({})
-  const [originalList, setOriginalList] = useState({})
+  const [itemList, setItemList] = useState<any>({})
+  const [originalList, setOriginalList] = useState<any>({})
   const [search, setSearch] = useState('')
+  const [refreshing, setRefreshing] = useState(false)
+  useFocusEffect(
+    React.useCallback(() => {
+      getItems()
+    }, [])
+  );
 
   function getItems() {
-
+    setRefreshing(true)
       axios.get('/user/income/get-income').then((response) => {
         if (response.data.success == true) {
           setOriginalList(response.data.data)
-          handleSearchChange('')
+          handleSearchChange('',response.data.data)
+          setRefreshing(false)
         }
       })
-
   }
+
+  const filteredData = () => {
+    
+  }
+
   let cloned = JSON.parse(JSON.stringify(itemList))
   let filteredList = {}
-  function handleSearchChange(text: string) {
+  function handleSearchChange(text: string,preload = null) {
+    console.log('?')
     setSearch(text)
     let mytext = text;
-    let obj = {}
-    Object.keys(originalList).forEach((y, i) => {
-      console.log(mytext)
-      obj[y] = originalList[y].filter((x) => {
+    let obj :any = {}
+    let currentList = preload ? preload : originalList
+    Object.keys(currentList).forEach((y, i) => {
+      obj[y] = currentList[y].filter((x : any) => {
         if (search.trim() == '') {
           return x
         }
@@ -80,9 +94,7 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
     filteredList = obj
     setItemList(obj)
   }
-  useEffect(() => {
-    getItems()
-  }, [])
+
   return (
     <SafeAreaView style={GlobalStyles.mainScreenContainer}>
       <View className='' style={styles.container} >
@@ -93,13 +105,13 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
           </View>
         </View>
 
-        <ScrollView className='flex flex-col mt-3 h-full pb-20' contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 20 }}>
+        <ScrollView className='flex flex-col mt-3 h-full pb-20' contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 20 }} refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} >
           {Object.keys(itemList).map((x, i) => {
             return (
-              <>
+              <View key={i}>
                 {itemList[x].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={i}>{x}</Text>}
                 <IncomeList items={itemList[x]} key={i + 'income'} />
-              </>
+              </View>
             )
           })}
         </ScrollView>

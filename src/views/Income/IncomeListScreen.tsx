@@ -59,7 +59,7 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
   const [search, setSearch] = useState('')
   const [refreshing, setRefreshing] = useState(false)
 
-  //Run when navigated to the route (to and from)
+  //Run when navigated to the route
   useFocusEffect(
     React.useCallback(() => {
       getItems()

@@ -87,7 +87,7 @@ export default function AddIncomeScreen({ navigation }: ScreenProps) {
         }
         setLoading(false)
     }
-    async function checkData()
+    async function checkData(inputKey : string | null = null )
     {
         let returnVal = 0;
         let userSchema = object({
@@ -102,7 +102,14 @@ export default function AddIncomeScreen({ navigation }: ScreenProps) {
             let errors : Array<String> = []
             // @ts-ignore
             reason.inner.forEach(error => {
-                errors.push(error.path)
+                if(inputKey && inputKey == error.path)
+                {
+                    errors.push(error.path)
+                }
+                else if(!inputKey)
+                {
+                    errors.push(error.path)
+                }
             })
             setErrors(errors)
             returnVal = 0;
@@ -118,7 +125,7 @@ export default function AddIncomeScreen({ navigation }: ScreenProps) {
                             <View><Text className='text-black'>Enter Amount</Text></View>
                             <View className='flex flex-row items-center pt-5 pb-1 px-4 border-b border-[#C9CFDC] '>
                                 <Text className='text-[#3195F7] text-3xl pb-0'>$</Text>
-                                <TextInput onBlur={() => {checkData()}} style={{alignSelf  : 'stretch'}} value={amount} onChangeText={(text) => setAmount(text)} placeholder='0.00' inputMode='decimal'  className=' text-[#3195F7]  font text-center text-3xl' textBreakStrategy='simple' placeholderTextColor={'#3195F7'}/>
+                                <TextInput onBlur={() => {checkData('amount')}} style={{alignSelf  : 'stretch'}} value={amount} onChangeText={(text) => setAmount(text)} placeholder='0.00' inputMode='decimal'  className=' text-[#3195F7]  font text-center text-3xl' textBreakStrategy='simple' placeholderTextColor={'#3195F7'}/>
                             </View>
                             <Text className='h-4 text-red-500'>{errors.includes('amount')? 'Amount is required' : ''}</Text>
                         </View>
@@ -126,7 +133,7 @@ export default function AddIncomeScreen({ navigation }: ScreenProps) {
                     <ScrollView className='flex flex-col mt-3 pb-20 pt-4' contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 20 }}>
                         <View className=''>
                             <Text className='text-black'>Title</Text>
-                            <TextInput onBlur={() => {checkData()}} className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' value={title} onChangeText={(text) => setTitle(text)} placeholder='Enter Title' placeholderTextColor={'#9DB2CE'}></TextInput>
+                            <TextInput onBlur={() => {checkData('title')}} className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' value={title} onChangeText={(text) => setTitle(text)} placeholder='Enter Title' placeholderTextColor={'#9DB2CE'}></TextInput>
                             <Text className='h-4 text-red-500'>{errors.includes('title')? 'Title is required' : ''}</Text>
                         </View>
                         <View className='pt-2'>

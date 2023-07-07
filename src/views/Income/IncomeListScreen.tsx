@@ -36,7 +36,7 @@ function IncomeItem({ item } : any) {
     <View className='flex flex-row justify-between mt-3'>
       <View className='flex flex-row '>
         <View className='h-10 w-10 bg-[#89D9BC] flex justify-center items-center rounded-lg'>
-          <Text className='text-white text-xl font-bold'>{moment(item.date).format('d')}</Text>
+          <Text className='text-white text-xl font-bold'>{moment(item.date).format('D')}</Text>
         </View>
         <View className='flex flex-col gap-1 ml-2'>
           <Text className='font-bold text-black text-md'>{item.title}</Text>
@@ -58,7 +58,6 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
   const [originalList, setOriginalList] = useState<any>({})
   const [search, setSearch] = useState('')
   const [refreshing, setRefreshing] = useState(false)
-
   //Run when navigated to the route
   useFocusEffect(
     React.useCallback(() => {
@@ -81,6 +80,7 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
 
   //Compute data filter
   function filterData(text : string,preload : null | IncomeData) {
+    console.log('filter array');
     let mytext = text;
     let obj :any = {}
     let currentList : IncomeData = preload ? preload : originalList
@@ -95,6 +95,7 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
       })
     })
     setItemList(obj)
+    console.log('filter array end')
   }
 
   //Handle search input

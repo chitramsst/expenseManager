@@ -65,7 +65,7 @@ export default function AddIncomeScreen({ navigation }: ScreenProps) {
         const data = new FormData();
         if(fileResponse && fileResponse != undefined && fileResponse.assets)
         {
-            data.append("uploadFile", {
+            data.append("attachment", {
                 name: fileResponse?.assets[0].fileName,
                 type: fileResponse?.assets[0].type,
                 uri: fileResponse?.assets[0].uri

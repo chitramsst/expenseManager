@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState} from 'react';
 
-import { Text, StyleSheet, Button, View, StatusBar, ScrollView, ActivityIndicator, Image, ImageBackground, Dimensions, Pressable, RefreshControl } from 'react-native'
+import { Text, StyleSheet, View, ScrollView, Dimensions, Pressable, RefreshControl } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles from '../../assets/globalstyles';
 import { TextInput } from 'react-native-gesture-handler';
-import NotificationIcon from '../../assets/Icons/NotificationIcon';
 import { WHITE } from '../../assets/colors';
 import { MagnifyingGlassIcon, PlusIcon } from 'react-native-heroicons/outline'
 import axios from 'axios';
 import moment from 'moment'
 import { Income } from '../../interfaces';
+import stringLimit from '../../utlities/stringLimit';
 interface ScreenProps {
   navigation: any
 }
@@ -40,7 +40,7 @@ function IncomeItem({ item } : any) {
         </View>
         <View className='flex flex-col gap-1 ml-2'>
           <Text className='font-bold text-black text-md'>{item.title}</Text>
-          <Text className='text-[#9DB2CE] text-xs'>{item.description} </Text>
+          <Text className='text-[#9DB2CE] text-xs'>{ stringLimit(item.description,20)} </Text>
         </View>
       </View>
       <View className='flex flex-row '>
@@ -58,23 +58,28 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
   const [originalList, setOriginalList] = useState<any>({})
   const [search, setSearch] = useState('')
   const [refreshing, setRefreshing] = useState(false)
+
+  //Run when navigated to the route (to and from)
   useFocusEffect(
     React.useCallback(() => {
       getItems()
     }, [])
   );
 
+  //Get Data From API
   function getItems() {
     setRefreshing(true)
       axios.get('/user/income/get-income').then((response) => {
         if (response.data.success == true) {
           setOriginalList(response.data.data)
+          //pass original data to filter because above set state is asynchronous and changes wont be shown in handleSearchChange
           handleSearchChange('',response.data.data)
           setRefreshing(false)
         }
       })
   }
 
+  //Compute data filter
   function filterData(text : string,preload : null | IncomeData) {
     let mytext = text;
     let obj :any = {}
@@ -92,9 +97,8 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
     setItemList(obj)
   }
 
-
+  //Handle search input
   function handleSearchChange(text: string,preload : null | IncomeData = null) {
-    console.log('?')
     setSearch(text)
     filterData(text,preload)
   }

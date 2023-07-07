@@ -10,17 +10,23 @@ import { WHITE } from '../../assets/colors';
 import { MagnifyingGlassIcon, PlusIcon } from 'react-native-heroicons/outline'
 import axios from 'axios';
 import moment from 'moment'
+import { Income } from '../../interfaces';
 interface ScreenProps {
   navigation: any
 }
 
-interface HomeState {
-  count: number;
+interface IncomeData{
+  [key: string]: Array<Income>; 
 }
-function IncomeList({ items } : any) {
+
+interface IncomeDataProps{
+  items: Array<Income>; 
+}
+
+function IncomeList({ items } : IncomeDataProps) {
   return (
-    items.map((x : any, i : any) => {
-      return <IncomeItem key={i} item={x} />
+    items.map((income , index) => {
+      return <IncomeItem key={index} item={income} />
     })
   )
 }
@@ -69,30 +75,28 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
       })
   }
 
-  const filteredData = () => {
-    
-  }
-
-  let cloned = JSON.parse(JSON.stringify(itemList))
-  let filteredList = {}
-  function handleSearchChange(text: string,preload = null) {
-    console.log('?')
-    setSearch(text)
+  function filterData(text : string,preload : null | IncomeData) {
     let mytext = text;
     let obj :any = {}
-    let currentList = preload ? preload : originalList
+    let currentList : IncomeData = preload ? preload : originalList
     Object.keys(currentList).forEach((y, i) => {
-      obj[y] = currentList[y].filter((x : any) => {
+      obj[y] = currentList[y].filter((income : Income) => {
         if (search.trim() == '') {
-          return x
+          return income
         }
         else {
-          return x.title.includes(mytext)
+          return income.title.toLowerCase().includes(mytext.toLowerCase())
         }
       })
     })
-    filteredList = obj
     setItemList(obj)
+  }
+
+
+  function handleSearchChange(text: string,preload : null | IncomeData = null) {
+    console.log('?')
+    setSearch(text)
+    filterData(text,preload)
   }
 
   return (

@@ -29,6 +29,7 @@ import ExpenseAddScreen from './views/Expense/ExpenseAddScreen';
 import ExpenseCategoryAddScreen from './views/Expense/ExpenseCategoryAddScreen';
 import ProfileScreen from './views/Profile/ProfileScreen';
 import axios from 'axios';
+import EditIncomeScreen from './views/Income/EditIncomeScreen';
 
 
 interface RoutePropData {
@@ -75,6 +76,7 @@ function ItemStack() {
             <Tab.Group>
                 <Tab.Screen name="Income" component={IncomeListScreen} options={{}}  />
                 <Tab.Screen name="Add Income" component={AddIncomeScreen} options={{}} initialParams={{ hideNotification: true }} />
+                <Tab.Screen name="Edit Income" component={EditIncomeScreen} options={{}} initialParams={{ hideNotification: true }} />
             </Tab.Group>
             <Tab.Group>
                 <Tab.Screen name="Expense" component={ExpenseListScreen} options={{}}  />

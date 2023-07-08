@@ -113,7 +113,6 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
 
   //Compute data filter
   function filterData(text : string,preload : null | IncomeData) {
-    console.log('filter array');
     let mytext = text;
     let obj :any = {}
     let currentList : IncomeData = preload ? preload : originalList
@@ -128,7 +127,6 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
       })
     })
     setItemList(obj)
-    console.log('filter array end')
   }
 
   //Handle search input
@@ -150,7 +148,6 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
       obj[y] = currentList[y]
     })
     setOriginalList(obj)
-    console.log(obj)
     handleSearchChange(search,obj)
   }
 

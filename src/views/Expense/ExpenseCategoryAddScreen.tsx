@@ -22,6 +22,7 @@ import { useFocusEffect } from '@react-navigation/native';
 export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
     const [expanded, setExpanded] = useState(false)
     const offset = useSharedValue(100);
+    const opacity = useSharedValue(0);
     const [height,setHeight] = useState(0)
     const [loaded, setLoaded] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -32,6 +33,18 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
     const [errors,setErrors] = useState<Array<String>>([])
 
     
+
+    const animatedStyle = useAnimatedStyle(() => {
+        if(!loaded == true)
+        {
+            return {}
+        }
+        return {
+            height: offset.value,
+            opacity: opacity.value
+        }
+    })
+
 
     useEffect(() => {
         setSelectedIcon(icons[0])
@@ -93,26 +106,18 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
         return returnVal;
     }
     
-    const animatedStyle = useAnimatedStyle(() => {
-        if(!loaded == true)
-        {
-            return {}
-        }
-        return {
-            height: offset.value
-        }
-    })
 
     function expandContainer() {
         setExpanded(true)
         offset.value = withTiming(height, {
             duration: 500,
         });
+        
     }
 
     function collapseContainer() {
         setExpanded(false)
-        offset.value = withTiming(125, {
+        offset.value = withTiming(100, {
             duration: 500,
         });
     }
@@ -133,6 +138,9 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
             return;
         }
         setHeight(e.nativeEvent.layout.height)
+        opacity.value = withTiming(1, {
+            duration: 500,
+        });
         setLoaded(true)
     }
 
@@ -145,7 +153,7 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
         <SafeAreaView style={GlobalStyles.mainScreenContainer}>
             <View className='flex justify-between flex-col' style={styles.container} >
                 <View className=''>
-                    <ScrollView className='flex flex-col mt-3 pb-20 pt-4' contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 20 }}>
+                    <ScrollView className='flex flex-col mt-3 pb-20 pt-4' contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 20 }}>
                         <View className=''>
                             <Text className='text-black'>Title</Text>
                             <TextInput onBlur={() => {checkData('title')}} className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' value={title} onChangeText={(text) => setTitle(text)} placeholder='Enter Title' placeholderTextColor={'#9DB2CE'}></TextInput>
@@ -153,7 +161,7 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
                         </View>
                         <View className='pt-4' >
                             <Text className='text-black'>Choose Icon</Text>
-                            <Animated.View style={ animatedStyle }  className={'overflow-hidden  rounded-xl'} onLayout={(e) => {
+                            <Animated.View style={ [animatedStyle, {opacity : 0}] }  className={'overflow-hidden  rounded-xl'} onLayout={(e) => {
                                 setInitialHeight(e)
                             }}>
                             <View className='flex flex-row  py-4 bg-[#F3F6FD] mt-2 rounded-xl flex-wrap  ' >
@@ -161,8 +169,8 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
                                 {
                                     icons.map(function (x, i) {
                                         return (
-                                            <Pressable onPress={() => selectIcon(x)} key={i}>
-                                                <View className='flex flex-col justify-between items-center ml-3 py-2' >
+                                            <Pressable onPress={() => selectIcon(x)} key={i} android_ripple={{color : x.color, borderless : true}} className='ml-3 rounded-full'>
+                                                <View className='flex flex-col justify-between items-center  py-2' >
                                                     <View className='h-14 w-14 bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: x.color }}>
                                                         <Image source={x.icon} className='w-8 h-8'></Image>
                                                     </View>
@@ -192,7 +200,7 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
                                 <TextInput style={{ textAlignVertical: 'top' }} value={description} onChangeText={(text) => setDescription(text)} className='bg-[#F3F6FD] text-black rounded-xl p-4 mt-2 flex flex-row justify-start' placeholder='Enter Description' placeholderTextColor={'#9DB2CE'} multiline={true} numberOfLines={4}></TextInput>
                             </View>
                         </View>
-                        <Pressable className='flex justify-center w-full flex-row pb-4 mt-4 ' onPress={() => {saveData()}}>
+                        <Pressable className='flex justify-center w-full flex-row mb-4 mt-4 ' onPress={() => {saveData()}} >
                             <View className='bg-black py-4 w-[95%] rounded-xl'><Text className='text-white text-center font-semibold'>Save</Text></View>
                         </Pressable>
                     </ScrollView>

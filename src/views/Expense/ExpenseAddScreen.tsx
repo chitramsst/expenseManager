@@ -203,7 +203,7 @@ export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
                                 {
                                     categories.map((category,index) => {
                                         return ( 
-                                            <Pressable key={category.id} onPress={() => selectCategory(category)}>
+                                            <Pressable key={category.id} onPress={() => selectCategory(category)} android_ripple={{color : icons[category.icon_number - 1].color, borderless : true}} >
                                                 <View className='flex flex-col justify-between items-center' >
                                                     <View className='h-16 w-16 bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: icons[category.icon_number - 1].color }}>
                                                         <Image source={icons[category.icon_number - 1].icon} className='w-8 h-8'></Image>

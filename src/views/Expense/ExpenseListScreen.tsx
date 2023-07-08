@@ -84,7 +84,7 @@ function ExpenseItem({ item,performActionCallback } : any) {
       </View>
       <View className='flex flex-row '>
           <View className='flex flex-col gap-1 ml-3 items-end'>
-            <Text className='font-bold text-black text-md'>+$ {Math.trunc(item.amount)}<Text className='text-[#9DB2CE]'>.{(item.amount).toFixed(2).split('.')[1]}</Text></Text>
+            <Text className='font-bold text-black text-md'>-$ {Math.trunc(item.amount)}<Text className='text-[#9DB2CE]'>.{(item.amount).toFixed(2).split('.')[1]}</Text></Text>
             <Text className='text-[#9DB2CE] text-xs'>{moment(item.date).format('LL')}</Text>
           </View>
         </View>
@@ -120,7 +120,6 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
 
   //Compute data filter
   function filterData(text: string, preload: null | ExpenseData) {
-    console.log('filter array');
     let mytext = text;
     let obj: any = {}
     let currentList: ExpenseData = preload ? preload : originalList
@@ -135,7 +134,6 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
       })
     })
     setItemList(obj)
-    console.log('filter array end')
   }
 
   //Handle search input
@@ -155,7 +153,6 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
       obj[y] = currentList[y]
     })
     setOriginalList(obj)
-    console.log(obj)
     handleSearchChange(search, obj)
   }
 

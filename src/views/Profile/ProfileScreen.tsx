@@ -55,7 +55,7 @@ export default function ProfileScreen({ navigation }: ScreenProps) {
                 </View>
                 <ChevronRightIcon color={'#92a2c5'} size={20} />
               </View>
-              <View className='flex flex-row justify-between mt-4'>
+              <Pressable className='flex flex-row justify-between mt-4' onPress={() => {navigation.navigate('Expense Category')}}>
                 <View className='flex flex-row items-center'>
                   <View className='bg-[#9C50E6] p-1 rounded-full'>
                     <ChartPieIcon color={'white'} size={20} />
@@ -63,7 +63,7 @@ export default function ProfileScreen({ navigation }: ScreenProps) {
                   <Text className='text-black ml-3 font-medium'>Expense Categories</Text>
                 </View>
                 <ChevronRightIcon color={'#92a2c5'} size={20} />
-              </View>
+              </Pressable>
               <View className='flex flex-row justify-between mt-4'>
                 <View className='flex flex-row items-center'>
                   <View className='bg-[#76D95B] p-1 rounded-full'>

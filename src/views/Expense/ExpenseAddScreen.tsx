@@ -20,30 +20,6 @@ interface ScreenProps {
     route :any
 }
 
-
-let randomItems = [
-    {
-        color: '#C4F439',
-        icon: require('../../assets/images/Icons/house.png')
-    },
-    {
-        color: '#F6AB65',
-        icon: require('../../assets/images/Icons/burger.png')
-    },
-    {
-        color: '#FE94B3',
-        icon: require('../../assets/images/Icons/fuel.png')
-    },
-    {
-        color: '#F9D75E',
-        icon: require('../../assets/images/Icons/shirt.png')
-    },
-    {
-        color: '#5EACF9',
-        icon: require('../../assets/images/Icons/medical.png')
-    },
-]
-
 export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
     const [fileResponse, setFileResponse] = useState<ImagePickerResponse | null>(null);
     const [showModal,setShowModal] = useState(false)

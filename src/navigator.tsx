@@ -31,6 +31,10 @@ import ProfileScreen from './views/Profile/ProfileScreen';
 import axios from 'axios';
 import EditIncomeScreen from './views/Income/EditIncomeScreen';
 import ExpenseEditScreen from './views/Expense/ExpenseEditScreen';
+import LoanListScreen from './views/Loans/LoanListScreen';
+import LoanAddScreen from './views/Loans/LoanAddScreen';
+import ExpenseCategoriesListScreen from './views/Categories/ExpenseCategoriesListScreen';
+import ExpenseCategoriesEditScreen from './views/Categories/ExpenseCategoriesListEditScreen';
 
 interface ExtendedRoute extends Route<string>{
     params : any
@@ -93,8 +97,17 @@ function ItemStack() {
             <Tab.Group>
                 <Tab.Screen name="Profile" component={ProfileScreen} options={{}}  />
             </Tab.Group>
+            <Tab.Group>
+                <Tab.Screen name="Loan" component={LoanListScreen} options={{}}  />
+                <Tab.Screen name="Add Loan" component={LoanAddScreen} options={{}} initialParams={{ hideNotification: true }}  />
+            </Tab.Group>
+            <Tab.Group>
+                <Tab.Screen name="Expense Category" component={ExpenseCategoriesListScreen} options={{}} initialParams={{ hideNotification: true }} />
+            </Tab.Group>
             <Stack.Group screenOptions={{presentation : 'modal'}}>
+                {/* @ts-ignore */}
                 <Tab.Screen  name="Add Expense Category" component={ExpenseCategoryAddScreen} options={{}}  initialParams={{ hideNotification: true, customName : 'Add Category' }} />
+                <Tab.Screen  name="Edit Expense Category" component={ExpenseCategoriesEditScreen} options={{}}  initialParams={{ hideNotification: true, customName : 'Edit Category' }} />
             </Stack.Group>
         </Stack.Navigator>
     )
@@ -109,11 +122,11 @@ function BottomBarComponent({ state, descriptors, navigation } : any)
             <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Expense'})}}>
                 <Wallet color={'#9DB2CE'}></Wallet>
             </Pressable>
-            <Pressable>
+            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Home'})}}>
                 <HomeIcon color={'#5EACF9'}></HomeIcon>
                 <View className='bg-[#5EACF9] h-1.5 w-1.5 rounded-full absolute -bottom-2 left-2'></View>
             </Pressable>
-            <Pressable>
+            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Loan'})}}>
                 <HandIcon color={'#9DB2CE'}></HandIcon>
             </Pressable>
             <Pressable>

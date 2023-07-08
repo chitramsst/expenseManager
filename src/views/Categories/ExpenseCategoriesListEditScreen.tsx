@@ -11,7 +11,7 @@ import { object, string, number, date, InferType } from 'yup';
 import {icons,Icon} from '../../data/expenseCategoryIcons';
 interface ScreenProps {
     navigation: any
-    routes : any
+    route : any
 }
 
 import { CheckCircleIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
@@ -20,11 +20,12 @@ import LoaderModal from '../../components/Modals/Common/LoaderModal';
 import { useFocusEffect, useNavigationState } from '@react-navigation/native';
 
 
-export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
+export default function ExpenseCategoriesEditScreen({ navigation,route }: ScreenProps) {
     const [expanded, setExpanded] = useState(false)
     const offset = useSharedValue(100);
     const opacity = useSharedValue(0);
     const [height,setHeight] = useState(0)
+    const [editingItem,setEditingItem] = useState<any>(null)
     const [loaded, setLoaded] = useState(false)
     const [loading, setLoading] = useState(false)
     const [lastRoute, setLastRoute] = useState('Add Expense')
@@ -34,6 +35,26 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
     const [description,setDescription] = useState('')
     const [errors,setErrors] = useState<Array<String>>([])
 
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setEditingItem(route.params.item)
+            performInitialEditDataInput(route.params.item)
+            let index = icons.findIndex((x) => x.id == route.params.item.icon_number)
+            if(index != -1)
+            {
+                setSelectedIcon(icons[index])
+
+            }
+        }, [])
+    );
+    
+    function performInitialEditDataInput(item : any)
+    {
+        setDescription(item.description)
+        setTitle(item.title)
+        
+    }
  
     useEffect(() => {
         let routes =  navigation.getState().routes
@@ -41,8 +62,6 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
             setLastRoute(routes[routes.length - 2].name)
         }
     },[])
-    
-    
 
     const animatedStyle = useAnimatedStyle(() => {
         if(!loaded == true)
@@ -54,11 +73,6 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
             opacity: opacity.value
         }
     })
-
-
-    useEffect(() => {
-        setSelectedIcon(icons[0])
-    },[])
 
     async function saveData()
     {
@@ -75,7 +89,7 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
             icon_number : (selectedIcon?.id)
         }
         try{
-            await axios.post('user/category/create',data).then((response) => {
+            await axios.post('user/category/edit/'+editingItem.id,data).then((response) => {
                 navigation.navigate(lastRoute,{item : response.data.data})
             }).catch((e) => {
                 console.log(e.toJSON())

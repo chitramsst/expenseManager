@@ -50,10 +50,12 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
   return (
     <SafeAreaView style={GlobalStyles.mainScreenContainer}>
       <View className='' style={styles.container} >
-        <FlatList className='mt-3 h-full pb-20 flex flex-row'
+        <FlatList className='mt-3 h-full pb-20 flex '
           contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 10 }}
           data={categories}
           numColumns={4}
+          
+          scrollEnabled={true}
           refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getData())} />)}
           keyExtractor={item => item.id}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
@@ -64,7 +66,7 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
                 <View className='h-[74px] w-[74px] bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: icons[item.icon_number - 1].color  }}>
                   <Image source={icons[item.icon_number - 1].icon} className='w-8 h-8'></Image>
                 </View>
-                <Text className='text-center mt-2 w-28 text-xs text-[#9DB2CE] '>{stringLimit(item.title,20 )}</Text>
+                <Text className='text-center mt-2 w-28 text-xs text-[#9DB2CE] '>{stringLimit(item.title,18 )}</Text>
               </Pressable>
             </View>
           )

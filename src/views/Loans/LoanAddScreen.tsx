@@ -117,17 +117,13 @@ export default function LoanAddScreen({ navigation }: ScreenProps) {
                                 <>
                                     <View className='mt-4'>
                                         <Text className='text-black'>Bill Date</Text>
-                                        <Pressable className='p-4 flex flex-row justify-between bg-[#F3F6FD] rounded-xl mt-2 items-center' onPress={() => { showDatepicker() }}>
-                                            <Text className='text-[#9DB2CE]'>{moment(date).format('L')}</Text>
-                                            <CalendarDaysIcon color={'#9DB2CE'} />
-                                        </Pressable>
+                                        <TextInput className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black'  inputMode='numeric' placeholder='Enter a date between 1 and 28' placeholderTextColor={'#9DB2CE'}></TextInput>
+                                        
                                     </View>
                                     <View className='mt-4'>
                                         <Text className='text-black'>Due Date</Text>
-                                        <Pressable className='p-4 flex flex-row justify-between bg-[#F3F6FD] rounded-xl mt-2 items-center' onPress={() => { showDatepicker() }}>
-                                            <Text className='text-[#9DB2CE]'>{moment(date).format('L')}</Text>
-                                            <CalendarDaysIcon color={'#9DB2CE'} />
-                                        </Pressable>
+                                        <TextInput className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' inputMode='numeric' placeholder='Enter a date between 1 and 28' placeholderTextColor={'#9DB2CE'}></TextInput>
+                                        
                                     </View>
                                 </>
 

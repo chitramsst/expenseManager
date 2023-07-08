@@ -19,7 +19,7 @@ interface HomeState {
 
 function LoanItem(){
     return ( 
-        <View>
+        <View className='my-1'>
             <View className='bg-[#599651] py-2 pb-4 rounded-t-3xl'>
                 <Text className='text-white text-xs text-center'>6 Months Remaining</Text>
             </View>

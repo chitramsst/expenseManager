@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { PencilIcon, TrashIcon } from 'react-native-heroicons/solid';
 import { icons } from '../../data/expenseCategoryIcons';
 import moment from 'moment';
+import EmptyComponent from '../../components/Common/EmptyComponent';
 interface ScreenProps {
   navigation: any
 }
@@ -193,17 +194,25 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
             <TextInput placeholder="Search" className='ml-2 flex w-full text-black' placeholderTextColor="#9DB2CE" hitSlop={100} onChangeText={(text) => { handleSearchChange(text) }} />
           </View>
         </View>
-
-        <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
-         renderItem={({item,index}) => {
-          return (
-          <View>
-            {itemList[item].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={item}>{item}</Text>}
-              <ExpenseList items={itemList[item]} key={item + 'expense'} performActionCallback={performAction}/>
-          </View>
-         )}}
-        >
-        </FlatList>
+        {
+          Object.keys(itemList).length > 0 && (
+            <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
+              renderItem={({item,index}) => {
+              return (
+              <View>
+                {itemList[item].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={item}>{item}</Text>}
+                  <ExpenseList items={itemList[item]} key={item + 'expense'} performActionCallback={performAction}/>
+              </View>
+              )}}
+            >
+            </FlatList>
+          )
+        }
+     {
+          Object.keys(itemList).length <= 0 && (
+            <EmptyComponent title="No Expense Recorded" text="Begin tracking your expenses by adding your spending. Tap the '+' button to record your expenses and gain insights into your financial habits."/>
+          )
+        }
         <Pressable onPress={() => { navigation.navigate('Add Expense') }} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{ width: 60, height: 60, left: ((Dimensions.get('window').width / 2) - 30) }}>
           <PlusIcon color={'#ffffff'} size={30} />
         </Pressable>

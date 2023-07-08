@@ -12,6 +12,7 @@ import moment from 'moment'
 import { Income } from '../../interfaces';
 import stringLimit from '../../utlities/stringLimit';
 import { PencilIcon, TrashIcon } from 'react-native-heroicons/solid';
+import EmptyComponent from '../../components/Common/EmptyComponent';
 
 
 
@@ -193,16 +194,25 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
             <TextInput placeholder="Search" className='ml-2 flex w-full text-black' placeholderTextColor="#9DB2CE" hitSlop={100} onChangeText={(text) => { handleSearchChange(text) }} />
           </View>
         </View>
-        <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
-         renderItem={({item,index}) => {
-          return (
-          <View>
-            {itemList[item].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={item}>{item}</Text>}
-              <IncomeList items={itemList[item]} key={item + 'income'} performActionCallback={performAction}/>
-          </View>
-         )}}
-        >
-        </FlatList>
+        {
+          Object.keys(itemList).length > 0 && (
+            <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
+              renderItem={({item,index}) => {
+              return (
+              <View>
+                {itemList[item].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={item}>{item}</Text>}
+                  <IncomeList items={itemList[item]} key={item + 'income'} performActionCallback={performAction}/>
+              </View>
+              )}}
+            >
+            </FlatList>
+          )
+        }
+       {
+          Object.keys(itemList).length <= 0 && (
+            <EmptyComponent title="No Income Recorded" text="Start tracking your income by adding your earnings. Tap the '+' button to record your income transactions and stay on top of your finances."/>
+          )
+        }
         <Pressable onPress={() => { navigation.navigate('Add Income') }} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{ width: 60, height: 60, left: ((Dimensions.get('window').width / 2) - 30) }}>
           <PlusIcon color={'#ffffff'} size={30} />
         </Pressable>

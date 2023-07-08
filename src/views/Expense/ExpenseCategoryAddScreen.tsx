@@ -189,7 +189,7 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
                             </View>
                             </Animated.View>
                             <View className='absolute -bottom-4 z-20 flex justify-between items-center w-full' >
-                                    <Pressable className='p-1 bg-[#F3F6FD] rounded-full border-[6px] border-white' onPress={() => { toggleContainer() }} hitSlop={40}>
+                                    <Pressable className='p-1 bg-[#F3F6FD] rounded-full border-[6px] border-white' onPress={() => { toggleContainer() }} hitSlop={20}>
                                         <ChevronDownIcon color={'#000000'} size={15} rotation={expanded ? 180 : 0} />
                                     </Pressable>
                                 </View>

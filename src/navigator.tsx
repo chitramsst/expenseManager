@@ -1,4 +1,4 @@
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer, Route, useNavigationContainerRef } from '@react-navigation/native';
 import { StackHeaderProps, createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
@@ -32,15 +32,21 @@ import axios from 'axios';
 import EditIncomeScreen from './views/Income/EditIncomeScreen';
 import ExpenseEditScreen from './views/Expense/ExpenseEditScreen';
 
+interface ExtendedRoute extends Route<string>{
+    params : any
+}
 
+interface ExtendedProps extends StackHeaderProps {
+    route: ExtendedRoute
+}
 interface RoutePropData {
-    routeData: StackHeaderProps
+    routeData: ExtendedProps
 }
 function LogoTitle({ routeData }: RoutePropData) {
     return (
         <View className='flex flex-row justify-between items-center bg-white p-4'>
             <Pressable hitSlop={30} onPress={({ }) => (routeData.navigation.goBack())}><BackButtonIcon /></Pressable>
-            <Text className='text-black text-xl font-bold '>{routeData.route.name}</Text>
+            <Text className='text-black text-xl font-bold '>{routeData.route.params?.customName ? routeData.route.params.customName :  routeData.route.name}</Text>
             {
                 // @ts-ignore
                 routeData.route.params?.hideNotification != true ?
@@ -73,7 +79,7 @@ function AuthStack() {
 
 function ItemStack() {
     return (
-        <Stack.Navigator screenOptions={{ header: (props) => (<LogoTitle routeData={props} />) }} >
+        <Stack.Navigator screenOptions={{ header: (props) => (<LogoTitle routeData={(props as ExtendedProps)} />) }} >
             <Tab.Group>
                 <Tab.Screen name="Income" component={IncomeListScreen} options={{}}  />
                 <Tab.Screen name="Add Income" component={AddIncomeScreen} options={{}} initialParams={{ hideNotification: true }} />
@@ -88,12 +94,12 @@ function ItemStack() {
                 <Tab.Screen name="Profile" component={ProfileScreen} options={{}}  />
             </Tab.Group>
             <Stack.Group screenOptions={{presentation : 'modal'}}>
-                <Tab.Screen  name="Add Expense Category" component={ExpenseCategoryAddScreen} options={{}}  initialParams={{ hideNotification: true }} />
+                <Tab.Screen  name="Add Expense Category" component={ExpenseCategoryAddScreen} options={{}}  initialParams={{ hideNotification: true, customName : 'Add Category' }} />
             </Stack.Group>
         </Stack.Navigator>
     )
 }
-function BottomBarComponent({ state, descriptors, navigation })
+function BottomBarComponent({ state, descriptors, navigation } : any)
 {
     return (
         <View className=' bg-[#F3F6FD] flex justify-evenly flex-row py-5'>

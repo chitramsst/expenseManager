@@ -197,16 +197,17 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
           </View>
         </View>
 
-        <ScrollView className='flex flex-col mt-3 h-full pb-20'  contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 20 }} refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)}>
-        {Object.keys(itemList).map((x, i) => {
-            return (
-              <View key={i}>
-                {itemList[x].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={i}>{x}</Text>}
-                <ExpenseList items={itemList[x]} key={i + 'expense'} performActionCallback={performAction}/>
-              </View>
-            )
-          })}
-        </ScrollView>
+        <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
+         renderItem={({item,index}) => {
+          return (
+          <View>
+            {itemList[item].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={item}>{item}</Text>}
+              <ExpenseList items={itemList[item]} key={item + 'expense'} performActionCallback={performAction}/>
+          </View>
+         )}}
+         keyExtractor={({item,index} : any) => item}
+        >
+        </FlatList>
         <Pressable onPress={() => { navigation.navigate('Add Expense') }} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{ width: 60, height: 60, left: ((Dimensions.get('window').width / 2) - 30) }}>
           <PlusIcon color={'#ffffff'} size={30} />
         </Pressable>

@@ -1,6 +1,6 @@
 import React, { useRef, useState} from 'react';
 
-import { Text, StyleSheet, View, ScrollView, Dimensions, Pressable, RefreshControl, Alert } from 'react-native'
+import { Text, StyleSheet, View, ScrollView, Dimensions, Pressable, RefreshControl, Alert, FlatList } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles from '../../assets/globalstyles';
@@ -196,17 +196,17 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
             <TextInput placeholder="Search" className='ml-2 flex w-full text-black' placeholderTextColor="#9DB2CE" hitSlop={100} onChangeText={(text) => { handleSearchChange(text) }} />
           </View>
         </View>
-
-        <ScrollView className='flex flex-col mt-3 h-full pb-20' contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 20 }} refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} >
-          {Object.keys(itemList).map((x, i) => {
-            return (
-              <View key={i}>
-                {itemList[x].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={i}>{x}</Text>}
-                <IncomeList items={itemList[x]} key={i + 'income'} performActionCallback={performAction}/>
-              </View>
-            )
-          })}
-        </ScrollView>
+        <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
+         renderItem={({item,index}) => {
+          return (
+          <View>
+            {itemList[item].length > 0 && <Text className='text-[#9DB2CE] font-bold mt-3' key={item}>{item}</Text>}
+              <IncomeList items={itemList[item]} key={item + 'income'} performActionCallback={performAction}/>
+          </View>
+         )}}
+         keyExtractor={({item,index} : any) => index}
+        >
+        </FlatList>
         <Pressable onPress={() => { navigation.navigate('Add Income') }} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{ width: 60, height: 60, left: ((Dimensions.get('window').width / 2) - 30) }}>
           <PlusIcon color={'#ffffff'} size={30} />
         </Pressable>

@@ -205,7 +205,6 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
               <ExpenseList items={itemList[item]} key={item + 'expense'} performActionCallback={performAction}/>
           </View>
          )}}
-         keyExtractor={({item,index} : any) => item}
         >
         </FlatList>
         <Pressable onPress={() => { navigation.navigate('Add Expense') }} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{ width: 60, height: 60, left: ((Dimensions.get('window').width / 2) - 30) }}>

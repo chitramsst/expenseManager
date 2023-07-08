@@ -204,7 +204,6 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
               <IncomeList items={itemList[item]} key={item + 'income'} performActionCallback={performAction}/>
           </View>
          )}}
-         keyExtractor={({item,index} : any) => index}
         >
         </FlatList>
         <Pressable onPress={() => { navigation.navigate('Add Income') }} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{ width: 60, height: 60, left: ((Dimensions.get('window').width / 2) - 30) }}>

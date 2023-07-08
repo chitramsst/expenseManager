@@ -1,7 +1,8 @@
+import { ImageSourcePropType } from "react-native"
 
 export interface Icon {
     id : String | Number
-    icon : string
+    icon : ImageSourcePropType
     color : string
 }
 

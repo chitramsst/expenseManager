@@ -16,19 +16,26 @@ interface ScreenProps {
 import { CheckCircleIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
 import axios from 'axios';
 import LoaderModal from '../../components/Modals/Common/LoaderModal';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
     const [expanded, setExpanded] = useState(false)
-    const offset = useSharedValue(125);
+    const offset = useSharedValue(100);
     const [height,setHeight] = useState(0)
     const [loaded, setLoaded] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [selectedIcon, setSelectedIcon] = useState(null)
+    const [selectedIcon, setSelectedIcon] = useState<null | Icon>(null)
 
     const [title,setTitle] = useState('')
     const [description,setDescription] = useState('')
     const [errors,setErrors] = useState<Array<String>>([])
+
+    
+
+    useEffect(() => {
+        setSelectedIcon(icons[0])
+    },[])
 
     async function saveData()
     {
@@ -41,11 +48,12 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
         setLoading(true)
         let data = {
             title,
-            description
+            description,
+            icon_number : (selectedIcon?.id)
         }
         try{
-            await axios.post('user/expense-category/create',data).then((response) => {
-                navigation.navigate('Expense')
+            await axios.post('user/category/create',data).then((response) => {
+                navigation.navigate('Add Expense',{item : response.data.data})
             }).catch((e) => {
                 console.log(e.toJSON())
             })
@@ -127,6 +135,12 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
         setHeight(e.nativeEvent.layout.height)
         setLoaded(true)
     }
+
+    function selectIcon(icon : Icon)
+    {
+        setSelectedIcon(icon)
+    }
+
     return (
         <SafeAreaView style={GlobalStyles.mainScreenContainer}>
             <View className='flex justify-between flex-col' style={styles.container} >
@@ -147,11 +161,21 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
                                 {
                                     icons.map(function (x, i) {
                                         return (
-                                            <View className='flex flex-col justify-between items-center ml-3 py-2' key={i}>
-                                                <View className='h-14 w-14 bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: x.color }}>
+                                            <Pressable onPress={() => selectIcon(x)} key={i}>
+                                                <View className='flex flex-col justify-between items-center ml-3 py-2' >
+                                                    <View className='h-14 w-14 bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: x.color }}>
+                                                        <Image source={x.icon} className='w-8 h-8'></Image>
+                                                    </View>
+                                                    {
+                                                        selectedIcon?.id == x.id && (
+                                                        <View className='absolute -right-1 bg-white rounded-full p-0.5 -top-2 z-50'>
+                                                            <CheckCircleIcon color={'#000000'} size={28} />
+                                                        </View>)
+                                                    }
+                                                
                                                 </View>
-                                                <Text className='text-[#9DB2CE] mt-2 text-xs'>Food</Text>
-                                            </View>)
+                                            </Pressable>
+                                            )
                                     })}
                                 
                             </View>

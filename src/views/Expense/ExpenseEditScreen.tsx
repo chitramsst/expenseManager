@@ -15,6 +15,7 @@ import {icons,Icon} from '../../data/expenseCategoryIcons';
 import LoaderModal from '../../components/Modals/Common/LoaderModal';
 import stringLimit from '../../utlities/stringLimit';
 import { useFocusEffect } from '@react-navigation/native';
+import { Expense } from '../../interfaces';
 interface ScreenProps {
     navigation: any
     route :any
@@ -44,7 +45,8 @@ let randomItems = [
     },
 ]
 
-export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
+export default function ExpenseEditScreen({ navigation,route }: ScreenProps) {
+    const [editingItem,setEditingItem] = useState<Expense | null>(null)
     const [fileResponse, setFileResponse] = useState<ImagePickerResponse | null>(null);
     const [showModal,setShowModal] = useState(false)
     const [loading,setLoading] = useState(false)
@@ -61,6 +63,9 @@ export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
         }, [])
     );
 
+
+
+
     useEffect(() => {
     },[])
     async function getData()
@@ -70,10 +75,25 @@ export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
             if(response.data.success == true)
             {
                 setCategories(response.data.data)
+                setEditingItem(route.params.item)
+                performInitialEditDataInput(route.params.item,response.data.data)
             }
             setLoading(false)
         })
     }
+
+    function performInitialEditDataInput(item : Expense,categories : Array<any>)
+    {
+        setAmount(item.amount.toString())
+        setDescription(item.description)
+        setTitle(item.title)
+        let index = categories.findIndex((x) => x.id == item.category_id)
+        if(index != -1)
+        {
+            setSelectedCategory(categories[index])
+        }
+    }
+
 
     const handleDocumentSelection = useCallback(async () => {
         setShowModal(true)
@@ -121,10 +141,10 @@ export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
         }
         data.append('amount',amount);
         data.append('title',title);
-        data.append('description',description);
+        data.append('description',description.trim() == '' ? '' : description);
         data.append('category_id',selectedCategory.id);
         try{
-            await axios.post('user/expense/create',data,{headers : {'Content-Type' : 'multipart/form-data'}}).then((response) => {
+            await axios.post('user/expense/edit/'+editingItem?.id,data,{headers : {'Content-Type' : 'multipart/form-data'}}).then((response) => {
                 navigation.navigate('Expense')
             }).catch((e) => {
                 console.log(e.toJSON())
@@ -210,7 +230,7 @@ export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
                                                     </View>
                                                     <Text className='text-[#9DB2CE] mt-2 text-xs'>{ stringLimit(category.title,10)}</Text>
                                                     {
-                                                        selectedCategory?.id == category.id && (
+                                                        (selectedCategory?.id == category.id) && (
                                                             <View className='absolute -right-1 bg-white rounded-full p-0.5 -top-2 z-50'>
                                                                 <CheckCircleIcon color={'#000000'} size={28} />
                                                             </View>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, SyntheticEvent } from 'react';
 
-import { Text, StyleSheet, Button, View, StatusBar, ScrollView, ActivityIndicator, Image, ImageBackground, Dimensions, Pressable } from 'react-native'
+import { Text, StyleSheet, Button, View, StatusBar, ScrollView, ActivityIndicator, Image, ImageBackground, Dimensions, Pressable, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles from '../../assets/globalstyles';
 import { TextInput } from 'react-native-gesture-handler';
@@ -21,6 +21,8 @@ export default function LoanAddScreen({ navigation }: ScreenProps) {
     const [date, setDate] = useState(new Date());
     const [loanFrom, setLoanFrom] = useState(1);
     const [showSaveModal, setShowSaveModal] = useState(false);
+    const [dueDate, setDueDate] = useState('');
+    const [billDate, setBillDate] = useState('');
 
     const onChange = (event: any, selectedDate: Date) => {
         const currentDate = selectedDate;
@@ -36,6 +38,24 @@ export default function LoanAddScreen({ navigation }: ScreenProps) {
         {
             showMode('date');
         }
+    }
+
+
+    const handleBillDueDateInput = (e : string) => {
+        if(parseInt(e) > 28)
+        {
+            return setDueDate((28).toString())
+        }
+        setDueDate(e)
+        return;
+    }
+
+    const handleBillDateInput = (e : string) => {
+        if(parseInt(e) > 28)
+        {
+            return setBillDate((28).toString())
+        }
+        setBillDate(e)
     }
 
     const changeLoanFromType = (type: any) => {
@@ -117,12 +137,12 @@ export default function LoanAddScreen({ navigation }: ScreenProps) {
                                 <>
                                     <View className='mt-4'>
                                         <Text className='text-black'>Bill Date</Text>
-                                        <TextInput className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black'  inputMode='numeric' placeholder='Enter a date between 1 and 28' placeholderTextColor={'#9DB2CE'}></TextInput>
+                                        <TextInput value={billDate} className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' onChangeText={(e) => handleBillDateInput(e)} inputMode='numeric' placeholder='Enter a date between 1 and 28' placeholderTextColor={'#9DB2CE'}></TextInput>
                                         
                                     </View>
                                     <View className='mt-4'>
                                         <Text className='text-black'>Due Date</Text>
-                                        <TextInput className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' inputMode='numeric' placeholder='Enter a date between 1 and 28' placeholderTextColor={'#9DB2CE'}></TextInput>
+                                        <TextInput value={dueDate} className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' onChangeText={(e) => handleBillDueDateInput(e)} inputMode='numeric' placeholder='Enter a date between 1 and 28' placeholderTextColor={'#9DB2CE'}></TextInput>
                                         
                                     </View>
                                 </>

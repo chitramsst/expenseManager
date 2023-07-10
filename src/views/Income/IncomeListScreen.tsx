@@ -13,6 +13,7 @@ import { Income } from '../../interfaces';
 import stringLimit from '../../utlities/stringLimit';
 import { PencilIcon, TrashIcon } from 'react-native-heroicons/solid';
 import EmptyComponent from '../../components/Common/EmptyComponent';
+import IncomePlaceholder from '../../components/Placeholders/IncomePlaceholder';
 
 
 
@@ -147,6 +148,10 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
         currentList[y].splice(index,1)
       }
       obj[y] = currentList[y]
+      if(currentList[y].length == 0)
+      {
+        delete obj[y]
+      }
     })
     setOriginalList(obj)
     handleSearchChange(search,obj)
@@ -195,7 +200,10 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
           </View>
         </View>
         {
-          Object.keys(itemList).length > 0 && (
+          refreshing && <IncomePlaceholder/>
+        }
+        {
+          (Object.keys(itemList).length > 0  && !refreshing) && (
             <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
               renderItem={({item,index}) => {
               return (
@@ -209,7 +217,7 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
           )
         }
        {
-          Object.keys(itemList).length <= 0 && (
+          (Object.keys(itemList).length <= 0 && !refreshing) &&  (
             <EmptyComponent title="No Income Recorded" text="Start tracking your income by adding your earnings. Tap the '+' button to record your income transactions and stay on top of your finances."/>
           )
         }

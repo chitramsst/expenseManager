@@ -8,6 +8,7 @@ import NotificationIcon from '../assets/Icons/NotificationIcon';
 import { ArrowDownLeftIcon, PlusIcon, ArrowUpRightIcon, EllipsisHorizontalIcon } from 'react-native-heroicons/solid'
 import { WHITE } from '../assets/colors';
 import { useSelector } from 'react-redux';
+import  PlaceHolderBase  from '../components/Placeholders/PlaceholderBase';
 
 interface HomeScreenProps {
   navigation: any
@@ -17,7 +18,7 @@ interface HomeState {
   count: number;
 }
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({navigation} : HomeScreenProps) {
   const store = useSelector((state: any) => state.store);
   return (
     <SafeAreaView style={GlobalStyles.mainScreenContainer}>

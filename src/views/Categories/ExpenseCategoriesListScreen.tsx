@@ -11,6 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import stringLimit from '../../utlities/stringLimit';
 import {icons,Icon} from '../../data/expenseCategoryIcons';
+import ExpenseCategoryPlaceholder from '../../components/Placeholders/ExpenseCategoryPlaceholder';
 
 interface ScreenProps {
   navigation: any
@@ -50,28 +51,36 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
   return (
     <SafeAreaView style={GlobalStyles.mainScreenContainer}>
       <View className='' style={styles.container} >
-        <FlatList className='mt-3 h-full pb-20 flex '
-          contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 10 }}
-          data={categories}
-          numColumns={4}
-          
-          scrollEnabled={true}
-          refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getData())} />)}
-          keyExtractor={item => item.id}
-          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-          columnWrapperStyle={{  }}
-          renderItem={({ item }) => (
-            <View className='w-[94px]'>
-              <Pressable android_ripple={{color : icons[item.icon_number - 1].color +'60', borderless : true}} className='flex flex-col justify-center items-center' onPress={ () => {editItem(item)}}> 
-                <View className='h-[74px] w-[74px] bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: icons[item.icon_number - 1].color  }}>
-                  <Image source={icons[item.icon_number - 1].icon} className='w-8 h-8'></Image>
+        {refreshing && 
+           <View className='flex flex-row flex-wrap mt-3 ' style={{paddingHorizontal: 8.29}}>
+              <ExpenseCategoryPlaceholder/>
+          </View>
+        }
+        { 
+          !refreshing && (
+              <FlatList className='mt-3 h-full pb-20 flex  '
+              contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 10 }}
+              data={categories}
+              numColumns={4}
+              scrollEnabled={true}
+              refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getData())} />)}
+              keyExtractor={item => item.id}
+              ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+              columnWrapperStyle={{  }}
+              renderItem={({ item }) => (
+                <View className='w-[94px]'>
+                  <Pressable android_ripple={{color : icons[item.icon_number - 1].color +'60', borderless : true}} className='flex flex-col justify-center items-center' onPress={ () => {editItem(item)}}> 
+                    <View className='h-[74px] w-[74px] bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: icons[item.icon_number - 1].color  }}>
+                      <Image source={icons[item.icon_number - 1].icon} className='w-8 h-8'></Image>
+                    </View>
+                    <Text className='text-center mt-2 w-28 text-xs text-[#9DB2CE] '>{stringLimit(item.title,18 )}</Text>
+                  </Pressable>
                 </View>
-                <Text className='text-center mt-2 w-28 text-xs text-[#9DB2CE] '>{stringLimit(item.title,18 )}</Text>
-              </Pressable>
-            </View>
+              )
+              }>
+            </FlatList>
           )
-          }>
-        </FlatList>
+        }
         <Pressable onPress={() => { navigation.navigate('Add Expense Category') }} className='absolute bottom-5 bg-[#3195F7] rounded-full flex justify-center items-center ' style={{ width: 60, height: 60, left: ((Dimensions.get('window').width / 2) - 30) }}>
           <PlusIcon color={'#ffffff'} size={30} />
         </Pressable>

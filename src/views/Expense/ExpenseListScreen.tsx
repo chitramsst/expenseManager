@@ -15,6 +15,7 @@ import { PencilIcon, TrashIcon } from 'react-native-heroicons/solid';
 import { icons } from '../../data/expenseCategoryIcons';
 import moment from 'moment';
 import EmptyComponent from '../../components/Common/EmptyComponent';
+import ExpensePlaceholder from '../../components/Placeholders/ExpensePlaceholder';
 interface ScreenProps {
   navigation: any
 }
@@ -152,6 +153,10 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
         currentList[y].splice(index, 1)
       }
       obj[y] = currentList[y]
+      if(currentList[y].length == 0)
+      {
+        delete obj[y]
+      }
     })
     setOriginalList(obj)
     handleSearchChange(search, obj)
@@ -195,7 +200,10 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
           </View>
         </View>
         {
-          Object.keys(itemList).length > 0 && (
+          refreshing && <ExpensePlaceholder/>
+        }
+        {
+          (Object.keys(itemList).length > 0 && !refreshing) && (
             <FlatList className='flex flex-col mt-3 px-4' contentContainerStyle={{paddingBottom : 20}} data={Object.keys(itemList)}  refreshControl={(<RefreshControl refreshing={refreshing} onRefresh={() => (getItems())} />)} 
               renderItem={({item,index}) => {
               return (
@@ -208,8 +216,8 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
             </FlatList>
           )
         }
-     {
-          Object.keys(itemList).length <= 0 && (
+      {
+          (Object.keys(itemList).length <= 0 && !refreshing) && (
             <EmptyComponent title="No Expense Recorded" text="Begin tracking your expenses by adding your spending. Tap the '+' button to record your expenses and gain insights into your financial habits."/>
           )
         }

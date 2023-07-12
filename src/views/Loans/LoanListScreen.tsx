@@ -73,7 +73,9 @@ export default function LoanListScreen({navigation} : ScreenProps) {
         </View>
     
         <ScrollView className='flex flex-col mt-3 h-full pb-20' contentContainerStyle={{paddingBottom : 10 , paddingHorizontal : 20}}>
-            <LoanItem/>
+            <Pressable onPress={() => {navigation.navigate('View Loan')}}>
+                <LoanItem/>
+            </Pressable>
             <LoanItem/>
             <LoanItem/>
             <LoanItem/>

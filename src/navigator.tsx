@@ -35,6 +35,7 @@ import LoanListScreen from './views/Loans/LoanListScreen';
 import LoanAddScreen from './views/Loans/LoanAddScreen';
 import ExpenseCategoriesListScreen from './views/Categories/ExpenseCategoriesListScreen';
 import ExpenseCategoriesEditScreen from './views/Categories/ExpenseCategoriesListEditScreen';
+import LoanViewScreen from './views/Loans/LoanViewScreen';
 
 interface ExtendedRoute extends Route<string>{
     params : any
@@ -100,6 +101,7 @@ function ItemStack() {
             <Tab.Group>
                 <Tab.Screen name="Loan" component={LoanListScreen} options={{}}  />
                 <Tab.Screen name="Add Loan" component={LoanAddScreen} options={{}} initialParams={{ hideNotification: true }}  />
+                <Tab.Screen name="View Loan" component={LoanViewScreen} options={{}} initialParams={{ hideNotification: true, customName : 'Loan Preview'  }}  />
             </Tab.Group>
             <Tab.Group>
                 <Tab.Screen name="Expense Category" component={ExpenseCategoriesListScreen} options={{}} initialParams={{ hideNotification: true }} />

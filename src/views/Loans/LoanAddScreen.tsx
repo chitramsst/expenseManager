@@ -58,6 +58,10 @@ export default function LoanAddScreen({ navigation }: ScreenProps) {
         setBillDate(e)
     }
 
+    const hideModal = () => {
+        setShowSaveModal(false)
+    }
+
     const changeLoanFromType = (type: any) => {
         setLoanFrom(type)
     }
@@ -135,6 +139,10 @@ export default function LoanAddScreen({ navigation }: ScreenProps) {
                         {
                             loanFrom == 3 && (
                                 <>
+                                    <View className='pt-4'>
+                                        <Text className='text-black'>Card Name</Text>
+                                        <TextInput className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' inputMode='text' placeholder='Enter name' placeholderTextColor={'#9DB2CE'}></TextInput>
+                                    </View>
                                     <View className='mt-4'>
                                         <Text className='text-black'>Bill Date</Text>
                                         <TextInput value={billDate} className='bg-[#F3F6FD] rounded-xl p-4 mt-2 text-black' onChangeText={(e) => handleBillDateInput(e)} inputMode='numeric' placeholder='Enter a date between 1 and 28' placeholderTextColor={'#9DB2CE'}></TextInput>
@@ -160,7 +168,7 @@ export default function LoanAddScreen({ navigation }: ScreenProps) {
                         </Pressable>
                     </ScrollView>
                 </View>
-                <LoanSaveModal show={showSaveModal} />
+                <LoanSaveModal show={showSaveModal} hideModal={hideModal}/>
             </View>
         </SafeAreaView>
     );

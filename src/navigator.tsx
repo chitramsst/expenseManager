@@ -36,9 +36,10 @@ import LoanAddScreen from './views/Loans/LoanAddScreen';
 import ExpenseCategoriesListScreen from './views/Categories/ExpenseCategoriesListScreen';
 import ExpenseCategoriesEditScreen from './views/Categories/ExpenseCategoriesListEditScreen';
 import LoanViewScreen from './views/Loans/LoanViewScreen';
+import Synchronizer from './components/Synchronizer';
 
-interface ExtendedRoute extends Route<string>{
-    params : any
+interface ExtendedRoute extends Route<string> {
+    params: any
 }
 
 interface ExtendedProps extends StackHeaderProps {
@@ -51,11 +52,11 @@ function LogoTitle({ routeData }: RoutePropData) {
     return (
         <View className='flex flex-row justify-between items-center bg-white p-4'>
             <Pressable hitSlop={30} onPress={({ }) => (routeData.navigation.goBack())}><BackButtonIcon /></Pressable>
-            <Text className='text-black text-xl font-bold '>{routeData.route.params?.customName ? routeData.route.params.customName :  routeData.route.name}</Text>
+            <Text className='text-black text-xl font-bold '>{routeData.route.params?.customName ? routeData.route.params.customName : routeData.route.name}</Text>
             {
                 // @ts-ignore
                 routeData.route.params?.hideNotification != true ?
-                     (
+                    (
                         <Pressable className='flex flex-col justify-center relative '>
                             <View className='absolute h-4 w-4 bg-red-500 -top-1 -right-1 rounded-full z-10 flex justify-center items-center'>
                                 <Text className='text-white text-xs '>1</Text>
@@ -86,49 +87,48 @@ function ItemStack() {
     return (
         <Stack.Navigator screenOptions={{ header: (props) => (<LogoTitle routeData={(props as ExtendedProps)} />) }} >
             <Tab.Group>
-                <Tab.Screen name="Income" component={IncomeListScreen} options={{}}  />
+                <Tab.Screen name="Income" component={IncomeListScreen} options={{}} />
                 <Tab.Screen name="Add Income" component={AddIncomeScreen} options={{}} initialParams={{ hideNotification: true }} />
                 <Tab.Screen name="Edit Income" component={EditIncomeScreen} options={{}} initialParams={{ hideNotification: true }} />
             </Tab.Group>
             <Tab.Group>
-                <Tab.Screen name="Expense" component={ExpenseListScreen} options={{}}  />
-                <Tab.Screen name="Add Expense" component={ExpenseAddScreen} options={{}}  initialParams={{ hideNotification: true }}  />
-                <Tab.Screen name="Edit Expense" component={ExpenseEditScreen} options={{}}  initialParams={{ hideNotification: true }} />
+                <Tab.Screen name="Expense" component={ExpenseListScreen} options={{}} />
+                <Tab.Screen name="Add Expense" component={ExpenseAddScreen} options={{}} initialParams={{ hideNotification: true }} />
+                <Tab.Screen name="Edit Expense" component={ExpenseEditScreen} options={{}} initialParams={{ hideNotification: true }} />
             </Tab.Group>
             <Tab.Group>
-                <Tab.Screen name="Profile" component={ProfileScreen} options={{}}  />
+                <Tab.Screen name="Profile" component={ProfileScreen} options={{}} />
             </Tab.Group>
             <Tab.Group>
-                <Tab.Screen name="Loan" component={LoanListScreen} options={{}}  />
-                <Tab.Screen name="Add Loan" component={LoanAddScreen} options={{}} initialParams={{ hideNotification: true }}  />
-                <Tab.Screen name="View Loan" component={LoanViewScreen} options={{}} initialParams={{ hideNotification: true, customName : 'Loan Preview'  }}  />
+                <Tab.Screen name="Loan" component={LoanListScreen} options={{}} />
+                <Tab.Screen name="Add Loan" component={LoanAddScreen} options={{}} initialParams={{ hideNotification: true }} />
+                <Tab.Screen name="View Loan" component={LoanViewScreen} options={{}} initialParams={{ hideNotification: true, customName: 'Loan Preview' }} />
             </Tab.Group>
             <Tab.Group>
                 <Tab.Screen name="Expense Category" component={ExpenseCategoriesListScreen} options={{}} initialParams={{ hideNotification: true }} />
             </Tab.Group>
-            <Stack.Group screenOptions={{presentation : 'modal'}}>
+            <Stack.Group screenOptions={{ presentation: 'modal' }}>
                 {/* @ts-ignore */}
-                <Tab.Screen  name="Add Expense Category" component={ExpenseCategoryAddScreen} options={{}}  initialParams={{ hideNotification: true, customName : 'Add Category' }} />
-                <Tab.Screen  name="Edit Expense Category" component={ExpenseCategoriesEditScreen} options={{}}  initialParams={{ hideNotification: true, customName : 'Edit Category' }} />
+                <Tab.Screen name="Add Expense Category" component={ExpenseCategoryAddScreen} options={{}} initialParams={{ hideNotification: true, customName: 'Add Category' }} />
+                <Tab.Screen name="Edit Expense Category" component={ExpenseCategoriesEditScreen} options={{}} initialParams={{ hideNotification: true, customName: 'Edit Category' }} />
             </Stack.Group>
         </Stack.Navigator>
     )
 }
-function BottomBarComponent({ state, descriptors, navigation } : any)
-{
+function BottomBarComponent({ state, descriptors, navigation }: any) {
     return (
         <View className=' bg-[#F3F6FD] flex justify-evenly flex-row py-5'>
-            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Income'})}}>
+            <Pressable onPress={() => { navigation.navigate('ItemStack', { screen: 'Income' }) }}>
                 <Coin color={'#9DB2CE'}></Coin>
             </Pressable>
-            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Expense'})}}>
+            <Pressable onPress={() => { navigation.navigate('ItemStack', { screen: 'Expense' }) }}>
                 <Wallet color={'#9DB2CE'}></Wallet>
             </Pressable>
-            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Home'})}}>
+            <Pressable onPress={() => { navigation.navigate('ItemStack', { screen: 'Home' }) }}>
                 <HomeIcon color={'#5EACF9'}></HomeIcon>
                 <View className='bg-[#5EACF9] h-1.5 w-1.5 rounded-full absolute -bottom-2 left-2'></View>
             </Pressable>
-            <Pressable onPress={() => {navigation.navigate('ItemStack',{screen : 'Loan'})}}>
+            <Pressable onPress={() => { navigation.navigate('ItemStack', { screen: 'Loan' }) }}>
                 <HandIcon color={'#9DB2CE'}></HandIcon>
             </Pressable>
             <Pressable>
@@ -139,7 +139,7 @@ function BottomBarComponent({ state, descriptors, navigation } : any)
 }
 function HomeStack() {
     return (
-        <Tab.Navigator  initialRouteName='Home' tabBar={props =>  <BottomBarComponent {...props}/>} tabBarPosition='bottom'>
+        <Tab.Navigator initialRouteName='Home' tabBar={props => <BottomBarComponent {...props} />} tabBarPosition='bottom'>
             <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarIcon: ({ focused, color }) => (focused ? <HomeIcon color={color} /> : <HomeIcon color={color} />) }} />
         </Tab.Navigator>
     )
@@ -155,10 +155,12 @@ function Navigator() {
             <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
             {store.userInfo.token ? (
                 <>
-                    <Stack.Navigator initialRouteName={"HomeStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
-                        <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
-                        <Stack.Screen name="ItemStack" component={ItemStack} options={{ headerShown: false }} />
-                    </Stack.Navigator>
+                    <Synchronizer>
+                        <Stack.Navigator initialRouteName={"HomeStack"} screenOptions={{ gestureResponseDistance: 20, gestureDirection: 'horizontal' }}>
+                            <Stack.Screen name="HomeStack" component={HomeStack} options={{ headerShown: false }} />
+                            <Stack.Screen name="ItemStack" component={ItemStack} options={{ headerShown: false }} />
+                        </Stack.Navigator>
+                    </Synchronizer>
                 </>
             )
                 : (

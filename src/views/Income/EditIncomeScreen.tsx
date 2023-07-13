@@ -13,6 +13,7 @@ import axios from 'axios';
 import LoaderModal from '../../components/Modals/Common/LoaderModal';
 import { useFocusEffect } from '@react-navigation/native';
 import { Income } from '../../interfaces';
+import { updateIncome } from '../../database/helpers/IncomeHelper';
 
 interface ScreenProps {
     navigation: any
@@ -80,29 +81,37 @@ export default function EditIncomeScreen({ navigation,route }: ScreenProps) {
             return;
         }
         setLoading(true)
-        const data = new FormData();
-        if(fileResponse && fileResponse != undefined && fileResponse.assets)
-        {
-            data.append("attachment", {
-                name: fileResponse?.assets[0].fileName,
-                type: fileResponse?.assets[0].type,
-                uri: fileResponse?.assets[0].uri
-            });
-        }
-        data.append('amount',amount);
-        data.append('title',title);
-        data.append('description',description);
-        try{
-            await axios.post('user/income/edit/'+editingItem?.id,data,{headers : {'Content-Type' : 'multipart/form-data'}}).then((response) => {
-                navigation.navigate('Income')
-            }).catch((e) => {
-                console.log(e.toJSON())
-            })
-        }
-        catch(e)
-        {
-            console.log(e)
-        }
+        await updateIncome({
+            id : editingItem?.id,
+            amount : Number(amount),
+            title,
+            date : new Date(),
+            description
+        });
+        navigation.navigate('Income');
+        // const data = new FormData();
+        // if(fileResponse && fileResponse != undefined && fileResponse.assets)
+        // {
+        //     data.append("attachment", {
+        //         name: fileResponse?.assets[0].fileName,
+        //         type: fileResponse?.assets[0].type,
+        //         uri: fileResponse?.assets[0].uri
+        //     });
+        // }
+        // data.append('amount',amount);
+        // data.append('title',title);
+        // data.append('description',description);
+        // try{
+        //     await axios.post('user/income/edit/'+editingItem?.id,data,{headers : {'Content-Type' : 'multipart/form-data'}}).then((response) => {
+        //         navigation.navigate('Income')
+        //     }).catch((e) => {
+        //         console.log(e.toJSON())
+        //     })
+        // }
+        // catch(e)
+        // {
+        //     console.log(e)
+        // }
         setLoading(false)
     }
     async function checkData(inputKey : string | null = null )

@@ -27,10 +27,11 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
   const [categories, setCategories] = useState<Array<any>>([])
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-  
+  const [dimensions, setDimensions] = useState(0)
   useFocusEffect(
     React.useCallback(() => {
       getData()
+      setDimensions(Dimensions.get('window').width)
     }, [])
   );
 
@@ -58,8 +59,8 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
         }
         { 
           !refreshing && (
-              <FlatList className='mt-3 h-full pb-20 flex  '
-              contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 10 }}
+              <FlatList className='mt-3 h-full pb-20   '
+              contentContainerStyle={{ paddingBottom: 10 }}
               data={categories}
               numColumns={4}
               scrollEnabled={true}
@@ -68,7 +69,7 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
               ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
               columnWrapperStyle={{  }}
               renderItem={({ item }) => (
-                <View className='w-[94px]'>
+                <View className='' key={item.id} style={{width : (dimensions/4) }}>
                   <Pressable android_ripple={{color : icons[item.icon_number - 1].color +'60', borderless : true}} className='flex flex-col justify-center items-center' onPress={ () => {editItem(item)}}> 
                     <View className='h-[74px] w-[74px] bg-[#F6AB65] flex flex-col justify-center items-center rounded-3xl' style={{ backgroundColor: icons[item.icon_number - 1].color  }}>
                       <Image source={icons[item.icon_number - 1].icon} className='w-8 h-8'></Image>

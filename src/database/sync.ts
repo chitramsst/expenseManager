@@ -22,8 +22,8 @@ export async function sync() {
     pushChanges: async ({changes, lastPulledAt}) => {
         console.log('CHANGES!', changes)
         await axios.post('/user/sync',{params : {lastPulledAt}, changes}).then((response) => {
-
         }).catch((e) => {
+            console.log(e)
             throw new Error(e);
         })
     },

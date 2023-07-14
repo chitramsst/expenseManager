@@ -15,6 +15,8 @@ import {icons,Icon} from '../../data/expenseCategoryIcons';
 import LoaderModal from '../../components/Modals/Common/LoaderModal';
 import stringLimit from '../../utlities/stringLimit';
 import { useFocusEffect } from '@react-navigation/native';
+import { getCategories } from '../../database/helpers/CategoryHelper';
+import { saveExpense } from '../../database/helpers/ExpenseHelper';
 interface ScreenProps {
     navigation: any
     route :any
@@ -39,16 +41,13 @@ export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
 
     useEffect(() => {
     },[])
+
     async function getData()
     {
         setLoading(true)
-        return axios.get('/user/expense/get-categories').then((response) => {
-            if(response.data.success == true)
-            {
-                setCategories(response.data.data)
-            }
-            setLoading(false)
-        })
+        let categories = await getCategories()
+        setCategories(categories)
+        setLoading(false)
     }
 
     const handleDocumentSelection = useCallback(async () => {
@@ -86,31 +85,27 @@ export default function ExpenseAddScreen({ navigation,route }: ScreenProps) {
             return;
         }
         setLoading(true)
-        const data = new FormData();
-        if(fileResponse && fileResponse != undefined && fileResponse.assets)
-        {
-            data.append("attachment", {
-                name: fileResponse?.assets[0].fileName,
-                type: fileResponse?.assets[0].type,
-                uri: fileResponse?.assets[0].uri
-            });
-        }
-        data.append('amount',amount);
-        data.append('title',title);
-        data.append('description',description);
-        data.append('category_id',selectedCategory.id);
-        try{
-            await axios.post('user/expense/create',data,{headers : {'Content-Type' : 'multipart/form-data'}}).then((response) => {
-                navigation.navigate('Expense')
-            }).catch((e) => {
-                console.log(e.toJSON())
-            })
-        }
-        catch(e)
-        {
-            console.log(e)
-        }
+        // const data = new FormData();
+        // if(fileResponse && fileResponse != undefined && fileResponse.assets)
+        // {
+        //     data.append("attachment", {
+        //         name: fileResponse?.assets[0].fileName,
+        //         type: fileResponse?.assets[0].type,
+        //         uri: fileResponse?.assets[0].uri
+        //     });
+        // }
+        await saveExpense({
+            amount : Number(amount),
+            title,
+            //@ts-ignore
+            date : new Date(),
+            income_type : 1,
+            attachment_url : '',
+            category_id : selectedCategory?.id,
+            description
+        });
         setLoading(false)
+        navigation.navigate('Expense')
     }
     async function checkData(inputKey : string | null = null )
     {

@@ -16,6 +16,9 @@ import { icons } from '../../data/expenseCategoryIcons';
 import moment from 'moment';
 import EmptyComponent from '../../components/Common/EmptyComponent';
 import ExpensePlaceholder from '../../components/Placeholders/ExpensePlaceholder';
+import { deleteExpense, observeExpense } from '../../database/helpers/ExpenseHelper';
+import database from '../../database';
+import { Q } from '@nozbe/watermelondb';
 interface ScreenProps {
   navigation: any
 }
@@ -107,16 +110,42 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
     }, [])
   );
 
+  function getFromDB() {
+    return new Promise(async (resolve) => {
+      let myItems = await database.collections.get('expenses').query(
+        Q.sortBy('date', Q.desc),
+      ).fetch();
+      let mySecureItems : Array<any> = []
+      let myPromises =  myItems.map(async (x) => {
+        let currentData = x._raw;
+        //@ts-ignore
+
+        let category = await x.category.fetch();
+        //@ts-ignore
+        currentData.category = category._raw
+        mySecureItems.push(currentData)
+      })
+      await Promise.all(myPromises)
+      resolve(mySecureItems)
+    })
+  }
   //Get Data From API
-  function getItems() {
+  async function getItems() {
     setRefreshing(true)
-    axios.get('/user/expense/get-expense').then((response) => {
-      if (response.data.success == true) {
-        setOriginalList(response.data.data)
-        //pass original data to filter because above set state is asynchronous and changes wont be shown in handleSearchChange
-        handleSearchChange('', response.data.data)
-        setRefreshing(false)
-      }
+      getFromDB().then(async (items : any) => {
+      const groups = await items.reduce( (groups : any, game : any) => {
+        const date = moment(game.date).format('MMMM MM');
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        let item = game;
+        // item.category =  game.category.fetch()
+        groups[date].push(game);
+        return groups;
+      }, {});
+      setOriginalList(groups);
+      handleSearchChange('',groups)
+      setRefreshing(false)
     })
   }
 
@@ -175,13 +204,10 @@ export default function ExpenseListScreen({ navigation }: ScreenProps) {
           style: 'cancel',
         },
         {
-          text: 'Yes', onPress: () => {
+          text: 'Yes', onPress: async () => {
             //Delete Item Here
-            axios.get('/user/expense/delete/' + item.id).then((response) => {
-              if (response.data.success == true) {
-                deleteItemFromList(item)
-              }
-            })
+            await deleteExpense({id : item.id})
+            deleteItemFromList(item)
           }
         },
       ]);

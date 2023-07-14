@@ -12,6 +12,7 @@ import axios from 'axios';
 import stringLimit from '../../utlities/stringLimit';
 import {icons,Icon} from '../../data/expenseCategoryIcons';
 import ExpenseCategoryPlaceholder from '../../components/Placeholders/ExpenseCategoryPlaceholder';
+import { observeCategory } from '../../database/helpers/CategoryHelper';
 
 interface ScreenProps {
   navigation: any
@@ -26,6 +27,7 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
   const [categories, setCategories] = useState<Array<any>>([])
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  
   useFocusEffect(
     React.useCallback(() => {
       getData()
@@ -36,17 +38,15 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
   }, [])
   async function getData() {
     setRefreshing(true)
-    return axios.get('/user/expense/get-categories').then((response) => {
-      if (response.data.success == true) {
-        setCategories(response.data.data)
-      }
-      setRefreshing(false)
+    observeCategory().subscribe((items) => {
+      setCategories(items)
     })
+    setRefreshing(false)
   }
 
   function editItem(item :any)
   {
-    navigation.navigate('Edit Expense Category',{item})
+    navigation.navigate('Edit Expense Category',{item : item._raw})
   }
   return (
     <SafeAreaView style={GlobalStyles.mainScreenContainer}>

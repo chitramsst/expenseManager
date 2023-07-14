@@ -18,7 +18,7 @@ import { CheckCircleIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
 import axios from 'axios';
 import LoaderModal from '../../components/Modals/Common/LoaderModal';
 import { useFocusEffect, useNavigationState } from '@react-navigation/native';
-
+import { observeCategory, saveCategory } from '../../database/helpers/CategoryHelper';
 
 export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
     const [expanded, setExpanded] = useState(false)
@@ -33,8 +33,7 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
     const [title,setTitle] = useState('')
     const [description,setDescription] = useState('')
     const [errors,setErrors] = useState<Array<String>>([])
-
- 
+  
     useEffect(() => {
         let routes =  navigation.getState().routes
         if( routes[routes.length - 2]){
@@ -69,17 +68,20 @@ export default function ExpenseCategoryAddScreen({ navigation }: ScreenProps) {
             return;
         }
         setLoading(true)
-        let data = {
-            title,
-            description,
-            icon_number : (selectedIcon?.id)
-        }
+        
         try{
-            await axios.post('user/category/create',data).then((response) => {
-                navigation.navigate(lastRoute,{item : response.data.data})
-            }).catch((e) => {
-                console.log(e.toJSON())
-            })
+            // await axios.post('user/category/create',data).then((response) => {
+            //     navigation.navigate(lastRoute,{item : response.data.data})
+            // }).catch((e) => {
+            //     console.log(e.toJSON())
+            // })
+            let item = await saveCategory({
+                title,
+                description,
+                //@ts-ignore
+                icon_number : (selectedIcon.id),
+            });
+            navigation.navigate(lastRoute)
         }
         catch(e)
         {

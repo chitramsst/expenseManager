@@ -18,6 +18,7 @@ import { CheckCircleIcon, ChevronDownIcon } from 'react-native-heroicons/solid'
 import axios from 'axios';
 import LoaderModal from '../../components/Modals/Common/LoaderModal';
 import { useFocusEffect, useNavigationState } from '@react-navigation/native';
+import { updateCategory } from '../../database/helpers/CategoryHelper';
 
 
 export default function ExpenseCategoriesEditScreen({ navigation,route }: ScreenProps) {
@@ -89,11 +90,11 @@ export default function ExpenseCategoriesEditScreen({ navigation,route }: Screen
             icon_number : (selectedIcon?.id)
         }
         try{
-            await axios.post('user/category/edit/'+editingItem.id,data).then((response) => {
-                navigation.navigate(lastRoute,{item : response.data.data})
-            }).catch((e) => {
-                console.log(e.toJSON())
-            })
+            //@ts-ignore
+            updateCategory({id : editingItem.id, title , description, icon_number : selectedIcon.id})
+            //@ts-ignore
+            navigation.navigate(lastRoute)
+           
         }
         catch(e)
         {

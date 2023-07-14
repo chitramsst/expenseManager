@@ -7,7 +7,9 @@ export default function Synchronizer({ children }: any) {
     const [syncState, setSyncState] = useState<string>('Syncing data...');
     let timeout : any = null;
     useEffect(() => {
-        checkUnSyncedChanges()
+        timeout = setInterval(() => {
+            checkUnSyncedChanges()
+        },10000)
     },[]);
 
     async function checkUnSyncedChanges() {

@@ -16,6 +16,7 @@ import EmptyComponent from '../../components/Common/EmptyComponent';
 import IncomePlaceholder from '../../components/Placeholders/IncomePlaceholder';
 import database from '../../database';
 import { deleteIncome } from '../../database/helpers/IncomeHelper';
+import { Q } from '@nozbe/watermelondb';
 
 
 interface ScreenProps {
@@ -101,7 +102,9 @@ export default function IncomeListScreen({ navigation }: ScreenProps) {
   );
   function getFromDB() {
     return new Promise(async (resolve) => {
-      let myItems = await database.collections.get('incomes').query().fetch();
+      let myItems = await database.collections.get('incomes').query(
+        Q.sortBy('date', Q.desc),
+      ).fetch();
       resolve(myItems)
     })
   }

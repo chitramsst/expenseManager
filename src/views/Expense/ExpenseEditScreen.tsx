@@ -16,6 +16,8 @@ import LoaderModal from '../../components/Modals/Common/LoaderModal';
 import stringLimit from '../../utlities/stringLimit';
 import { useFocusEffect } from '@react-navigation/native';
 import { Expense } from '../../interfaces';
+import { getCategories } from '../../database/helpers/CategoryHelper';
+import { updateExpense } from '../../database/helpers/ExpenseHelper';
 interface ScreenProps {
     navigation: any
     route :any
@@ -71,15 +73,11 @@ export default function ExpenseEditScreen({ navigation,route }: ScreenProps) {
     async function getData()
     {
         setLoading(true)
-        return axios.get('/user/expense/get-categories').then((response) => {
-            if(response.data.success == true)
-            {
-                setCategories(response.data.data)
-                setEditingItem(route.params.item)
-                performInitialEditDataInput(route.params.item,response.data.data)
-            }
-            setLoading(false)
-        })
+        let categories = await getCategories()
+        setCategories(categories)
+        setEditingItem(route.params.item)
+        performInitialEditDataInput(route.params.item,categories)
+        setLoading(false)
     }
 
     function performInitialEditDataInput(item : Expense,categories : Array<any>)
@@ -130,31 +128,19 @@ export default function ExpenseEditScreen({ navigation,route }: ScreenProps) {
             return;
         }
         setLoading(true)
-        const data = new FormData();
-        if(fileResponse && fileResponse != undefined && fileResponse.assets)
-        {
-            data.append("attachment", {
-                name: fileResponse?.assets[0].fileName,
-                type: fileResponse?.assets[0].type,
-                uri: fileResponse?.assets[0].uri
-            });
-        }
-        data.append('amount',amount);
-        data.append('title',title);
-        data.append('description',description.trim() == '' ? '' : description);
-        data.append('category_id',selectedCategory.id);
-        try{
-            await axios.post('user/expense/edit/'+editingItem?.id,data,{headers : {'Content-Type' : 'multipart/form-data'}}).then((response) => {
-                navigation.navigate('Expense')
-            }).catch((e) => {
-                console.log(e.toJSON())
-            })
-        }
-        catch(e)
-        {
-            console.log(e)
-        }
+        await updateExpense({
+            id : editingItem?.id,
+            amount : Number(amount),
+            title,
+            //@ts-ignore
+            date : new Date(),
+            //@ts-ignore
+            attachment_url : '',
+            category_id : selectedCategory?.id,
+            description
+        });
         setLoading(false)
+        navigation.navigate('Expense')
     }
     async function checkData(inputKey : string | null = null )
     {

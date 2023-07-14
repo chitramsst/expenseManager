@@ -17,8 +17,7 @@ import { Provider } from "react-redux";
 
 import {
   SafeAreaView,
-  StatusBar,
-  StyleSheet,
+  View,
   useColorScheme,
 } from 'react-native';
 
@@ -27,6 +26,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import Navigator from './src/navigator';
+import SyncInfo from './src/components/SyncInfo';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -38,7 +38,10 @@ function App(): JSX.Element {
   return (
     <Provider store={appStore}>
       <PersistGate loading={null} persistor={persistor} >
-        <Navigator />
+        <View className='  h-full'>
+          <Navigator />
+          <SyncInfo/>
+        </View>
       </PersistGate>
     </Provider>
   );

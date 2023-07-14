@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-import { Text, StyleSheet, Button, View, StatusBar, ScrollView, ActivityIndicator, Image, ImageBackground, Dimensions, Pressable } from 'react-native'
+import { Text, StyleSheet, Button, View, StatusBar, ScrollView, ActivityIndicator, Image, ImageBackground, Dimensions, Pressable, DeviceEventEmitter } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles from '../../assets/globalstyles';
 import { FlatList, RefreshControl, TextInput } from 'react-native-gesture-handler';
-import NotificationIcon from '../../assets/Icons/NotificationIcon';
 import { WHITE } from '../../assets/colors';
-import { MagnifyingGlassIcon, PlusIcon, ChevronRightIcon } from 'react-native-heroicons/outline'
+import {  PlusIcon } from 'react-native-heroicons/outline'
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import stringLimit from '../../utlities/stringLimit';
@@ -32,6 +31,12 @@ export default function ExpenseCategoriesListScreen({ navigation }: ScreenProps)
     React.useCallback(() => {
       getData()
       setDimensions(Dimensions.get('window').width)
+      DeviceEventEmitter.addListener('synchronizer',(message) => {
+        getData()
+      })
+      return () => {
+        DeviceEventEmitter.removeAllListeners('synchronizer')
+      }
     }, [])
   );
 
